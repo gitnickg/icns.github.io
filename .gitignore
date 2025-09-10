@@ -1,0 +1,23 @@
+# Hugo
+public/
+resources/
+.hugo_build.lock
+
+# Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Editor folders and files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+.viminfo
+*~
+*.swp
+
+# Security
+.env
+*.log
+secrets.yml
