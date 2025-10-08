@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://icns.ca/sitemap.xml
