@@ -1,0 +1,22 @@
+{
+  "name": "icns Consulting",
+  "short_name": "icns",
+  "description": "Cybersecurity, GRC, Fintech, Digital Media and Bitcoin consulting",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1c3ed3",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icns-logo-circle.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
