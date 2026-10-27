@@ -6,7 +6,7 @@ Plain HTML and CSS, no build step and no framework. Edit the files directly and 
 
 ## Files
 
-- `index.html`: the whole site (services, process, about, contact)
+- `index.html`: the whole site (services, experience, process, contact)
 - `404.html`: shown by GitHub Pages for any missing URL
 - `contact/index.html`: redirect from the old contact page to `/#contact`
 - `css/site.css`: all styles, including dark mode
