@@ -1,6 +1,6 @@
 # Guidance for coding agents
 
-Static site for icns (https://icns.ca), an independent security and compliance consultancy in Halifax, Nova Scotia. Hosted on GitHub Pages; `CNAME` sets the custom domain.
+Static site for icns (https://icns.ca), an independent security consultancy in Halifax, Nova Scotia. Hosted on GitHub Pages; `CNAME` sets the custom domain.
 
 ## Rules
 
