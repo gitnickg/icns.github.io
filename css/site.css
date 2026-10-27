@@ -239,6 +239,21 @@ a:hover { text-decoration-thickness: 2px; }
 .steps h3 { font-size: 1.125rem; margin-bottom: 0.5rem; }
 .steps p { color: var(--ink-soft); }
 
+/* Background: a real sequence, newest first */
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 2rem;
+  max-width: var(--measure);
+}
+.timeline li { border-left: 3px solid var(--blue); padding-left: 1.25rem; }
+.timeline .years { display: block; color: var(--blue); font-weight: 500; font-size: 0.9375rem; }
+.timeline h3 { font-size: 1.125rem; margin: 0.15rem 0 0.4rem; }
+.timeline p { color: var(--ink-soft); }
+
 /* Contact */
 
 .contact-list {
