@@ -14,6 +14,8 @@ Plain HTML and CSS, no build step and no framework. Edit the files directly and 
 - `fonts/`: self-hosted Schibsted Grotesk (SIL Open Font License, see `fonts/OFL.txt`)
 - `images/og.png`: 1200×630 link preview image
 - `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `images/icon-512.png`: icons
+- `.well-known/security.txt`: how to report a vulnerability (RFC 9116). Renew the `Expires` date before 2027-10-27
+- `.nojekyll`: tells GitHub Pages to serve files as-is, so `.well-known/` is published
 - `CNAME`, `robots.txt`, `sitemap.xml`, `manifest.json`
 
 ## Preview locally
