@@ -9,6 +9,7 @@ Static site for icns consulting inc. (https://icns.ca), an independent security 
 - Keep it accessible: one `h1` per page, visible `:focus-visible` outlines, `width`/`height` on every `<img>`, and respect `prefers-reduced-motion`.
 - `sitemap.xml` uses absolute URLs (https://icns.ca/...). Add an entry for every new public page and update `lastmod`.
 - Optimize new images (WebP or compressed PNG/JPEG, well under 200 KB).
+- Keep `bitcoin.pdf` at the repo root; it is intentionally served at /bitcoin.pdf.
 - Contact channels are email (hello@icns.ca), LinkedIn and GitHub. There is no X/Twitter account.
 
 ## Preview
