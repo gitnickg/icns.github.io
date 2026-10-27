@@ -287,15 +287,6 @@ a:hover { text-decoration-thickness: 2px; }
 .social a:hover { color: var(--blue); }
 .social svg { width: 1.375rem; height: 1.375rem; }
 
-.social-lg { gap: 1rem; }
-.social-lg a {
-  width: 3.5rem;
-  height: 3.5rem;
-  color: var(--blue);
-  border: 1.5px solid var(--rule);
-}
-.social-lg a:hover { border-color: var(--blue); background: var(--surface); }
-.social-lg svg { width: 1.75rem; height: 1.75rem; }
 
 /* Footer */
 
@@ -337,4 +328,3 @@ a:hover { text-decoration-thickness: 2px; }
   .steps { grid-template-columns: 1fr; }
 }
 
-.contact-intro { margin-bottom: 2rem; }
