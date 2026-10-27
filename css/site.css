@@ -1,0 +1,377 @@
+/* icns.ca — hand-written, no framework. */
+
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/fonts/schibsted-grotesk-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/fonts/schibsted-grotesk-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/fonts/schibsted-grotesk-latin-700-normal.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --paper: #f5f7fc;
+  --surface: #ffffff;
+  --ink: #0e1838;
+  --ink-soft: #46506e;
+  --rule: #d5dbea;
+  --blue: #1c3ed3;
+  --blue-ink: #ffffff;
+  --high: #a8321e;
+  --high-bg: #fbe9e5;
+  --code-bg: #eef1f8;
+
+  --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --measure: 36rem;
+  --page: 70rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --section: clamp(4rem, 9vw, 7rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0b1330;
+    --surface: #111b3f;
+    --ink: #e8ebf6;
+    --ink-soft: #a6aecb;
+    --rule: #26315a;
+    --blue: #8da2ff;
+    --blue-ink: #0b1330;
+    --high: #ff9a85;
+    --high-bg: #3a1d1d;
+    --code-bg: #0b1330;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 1.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+h1, h2, h3, p, ol, ul, dl, dd { margin: 0; }
+
+a { color: var(--blue); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -4rem;
+  padding: 0.5rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  z-index: 10;
+}
+.skip-link:focus { top: 1rem; }
+
+.wrap {
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Header */
+
+.site-header .wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.5rem;
+}
+
+.wordmark {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.site-nav ul {
+  display: flex;
+  gap: clamp(1rem, 3vw, 2rem);
+  list-style: none;
+  padding: 0;
+}
+.site-nav a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+}
+.site-nav a:hover { color: var(--blue); }
+
+/* Hero */
+
+.hero .wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+  padding-block: clamp(3rem, 8vw, 6rem) var(--section);
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6.2vw, 4.75rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  max-width: 11ch;
+}
+
+.hero .lede {
+  margin-top: 1.75rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 30rem;
+}
+
+.hero .actions {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  background: var(--blue);
+  color: var(--blue-ink);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 3px;
+}
+.button:hover { filter: brightness(1.12); }
+
+.hero .where { color: var(--ink-soft); }
+
+/* Sample finding: the one designed object on the page */
+
+.finding {
+  margin: 0;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 6px solid var(--high);
+  border-radius: 3px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  font-size: 0.97rem;
+}
+
+.finding-caption {
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.finding-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.severity {
+  background: var(--high-bg);
+  color: var(--high);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 2px;
+}
+
+.finding h2 {
+  font-size: 1.125rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.finding dl {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.9rem 1rem;
+  margin-top: 1rem;
+}
+.finding dt { font-weight: 500; }
+.finding dd { color: var(--ink-soft); min-width: 0; }
+
+.finding code {
+  display: block;
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--code-bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  border-radius: 2px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Sections */
+
+.section { padding-block: var(--section); border-top: 1px solid var(--rule); }
+
+.section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 2rem clamp(2rem, 6vw, 5rem);
+}
+
+.section h2.title {
+  font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+.section .intro {
+  color: var(--ink-soft);
+  font-size: 1.125rem;
+  max-width: var(--measure);
+}
+
+/* Services */
+
+.services {
+  list-style: none;
+  padding: 0;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.5rem clamp(1.5rem, 4vw, 3rem);
+}
+.services li { border-top: 3px solid var(--blue); padding-top: 1.25rem; }
+.services h3 { font-size: 1.25rem; line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 0.75rem; }
+.services p { color: var(--ink-soft); }
+
+/* Process: a real sequence, so it's numbered */
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 2.5rem);
+  counter-reset: step;
+}
+.steps li { counter-increment: step; }
+.steps li::before {
+  content: counter(step);
+  display: block;
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--blue);
+  margin-bottom: 1rem;
+}
+.steps h3 { font-size: 1.125rem; margin-bottom: 0.5rem; }
+.steps p { color: var(--ink-soft); }
+
+/* About */
+
+.about-body { max-width: var(--measure); }
+.about-body p + p { margin-top: 1rem; }
+
+/* Contact */
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.contact-list a {
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.contact-list span {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+}
+
+/* Footer */
+
+.site-footer {
+  border-top: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+}
+.site-footer .wrap { padding-block: 2rem; }
+
+/* 404 */
+
+.not-found { padding-block: clamp(4rem, 12vw, 9rem); }
+.not-found h1 {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.not-found p { margin-top: 1.25rem; color: var(--ink-soft); max-width: var(--measure); }
+.not-found .button { margin-top: 2rem; }
+
+/* Responsive */
+
+@media (max-width: 60rem) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .hero h1 { max-width: 13ch; }
+  .services { grid-template-columns: 1fr; max-width: var(--measure); }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .section-head { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 34rem) {
+  .site-nav { display: none; }
+  .steps { grid-template-columns: 1fr; }
+  .finding dl { grid-template-columns: 1fr; gap: 0.25rem; }
+  .finding dd + dt { margin-top: 0.75rem; }
+}
+
+.contact-intro { margin-bottom: 2rem; }
