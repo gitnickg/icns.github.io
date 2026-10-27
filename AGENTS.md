@@ -1,123 +1,19 @@
-# CLAUDE.md
+# Guidance for coding agents
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Static site for icns consulting inc. (https://icns.ca), an independent security consultancy in Halifax, Nova Scotia. Hosted on GitHub Pages; `CNAME` sets the custom domain.
 
-## Project Overview
+## Rules
 
-Static website for icns Consulting (https://icns.ca), a cybersecurity and GRC consulting firm. Built with Hugo, hosted on GitHub Pages.
+- Hand-written HTML and CSS only. No framework, build step, or third-party scripts or fonts loaded from other domains.
+- All styling lives in `css/site.css`, with colors as custom properties on `:root` and a `prefers-color-scheme: dark` override. Do not add inline styles.
+- Keep it accessible: one `h1` per page, visible `:focus-visible` outlines, `width`/`height` on every `<img>`, and respect `prefers-reduced-motion`.
+- `sitemap.xml` uses absolute URLs (https://icns.ca/...). Add an entry for every new public page and update `lastmod`.
+- Optimize new images (WebP or compressed PNG/JPEG, well under 200 KB).
+- Keep `bitcoin.pdf` at the repo root; it is intentionally served at /bitcoin.pdf.
+- Contact channels are email (hello@icns.ca), LinkedIn and GitHub. There is no X/Twitter account.
 
-## Development Workflow
-
-This repository contains **pre-built static output only**. The Hugo source files are not in this repo.
-
-- No build commands, package.json, or build automation exists here
-- Edit HTML/CSS/JS files directly for changes
-- CSS is minified Bootstrap-based (`css/style.min.*.css`)
-- JavaScript is minimal - only mobile menu toggle (`js/scripts.min.*.js`)
-
-## Serving Locally
+## Preview
 
 ```bash
-# Use any static file server, e.g.:
 python3 -m http.server 8000
-# Then open http://localhost:8000
 ```
-
-## Architecture
-
-```
-├── index.html           # Homepage with fullscreen hero image
-├── contact/             # Contact page
-├── pages/, history/, 404/, tags/  # Additional pages
-├── css/                 # Minified Bootstrap-based styles
-├── js/                  # Minimal scripts (menu toggle only)
-├── images/              # Logos, backgrounds, service icons
-├── social/              # Social media SVG icons
-├── features/            # Feature SVG icons
-├── robots.txt           # Search engine rules
-├── sitemap.xml          # Site structure for SEO
-└── CNAME                # GitHub Pages custom domain (icns.ca)
-```
-
-## Key Design Patterns
-
-- **Fixed footer**: Overlays hero image at bottom of viewport
-- **Fullscreen hero**: Background image fills viewport height
-- **Responsive**: Bootstrap grid, mobile hamburger menu
-- External links use `rel="noopener noreferrer"` for security
-
-## Image Assets
-
-Images are stored in `images/`. Critical assets have been optimized:
-- `images/icns-logo.png` (~420KB)
-- `images/icns-logo-circle.png` (~383KB)
-- `images/space-icns.jpg` (~369KB)
-
-**Maintenance Requirements:**
-- **Images:** New images must be optimized (target <500KB). Use Python/Pillow scripts.
-- **Sitemap:** `sitemap.xml` must use **absolute URLs** (https://icns.ca/...).
-- **HTML:** Image tags must include `width` and `height` attributes to prevent CLS.
-
-
----
-
-# GEMINI.md
-
-This file provides guidance to Gemini when working with code in this repository.
-
-## Project Overview
-
-Static website for icns Consulting (https://icns.ca), a cybersecurity and GRC consulting firm. Built with Hugo, hosted on GitHub Pages.
-
-## Development Workflow
-
-This repository contains **pre-built static output only**. The Hugo source files are not in this repo.
-
-- No build commands, package.json, or build automation exists here
-- Edit HTML/CSS/JS files directly for changes
-- CSS is minified Bootstrap-based (`css/style.min.*.css`)
-- JavaScript is minimal - only mobile menu toggle (`js/scripts.min.*.js`)
-
-## Serving Locally
-
-```bash
-# Use any static file server, e.g.:
-python3 -m http.server 8000
-# Then open http://localhost:8000
-```
-
-## Architecture
-
-```
-├── index.html           # Homepage with fullscreen hero image
-├── contact/             # Contact page
-├── pages/, history/, 404/, tags/  # Additional pages
-├── css/                 # Minified Bootstrap-based styles
-├── js/                  # Minimal scripts (menu toggle only)
-├── images/              # Logos, backgrounds, service icons
-├── social/              # Social media SVG icons
-├── features/            # Feature SVG icons
-├── robots.txt           # Search engine rules
-├── sitemap.xml          # Site structure for SEO
-└── CNAME                # GitHub Pages custom domain (icns.ca)
-```
-
-## Key Design Patterns
-
-- **Fixed footer**: Overlays hero image at bottom of viewport
-- **Fullscreen hero**: Background image fills viewport height
-- **Responsive**: Bootstrap grid, mobile hamburger menu
-- External links use `rel="noopener noreferrer"` for security
-
-## Image Assets
-
-Images are stored in `images/`. Critical assets have been optimized:
-- `images/icns-logo.png` (~420KB)
-- `images/icns-logo-circle.png` (~383KB)
-- `images/space-icns.jpg` (~369KB)
-
-**Maintenance Requirements:**
-- **Images:** New images must be optimized (target <500KB). Use Python/Pillow scripts.
-- **Sitemap:** `sitemap.xml` must use **absolute URLs** (https://icns.ca/...).
-- **HTML:** Image tags must include `width` and `height` attributes to prevent CLS.
-

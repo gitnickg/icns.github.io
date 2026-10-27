@@ -1,48 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://icns.ca/services/compliance/</loc>
-    <lastmod>2025-11-18T12:33:46+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/services/cloud/</loc>
-    <lastmod>2025-11-18T12:33:46+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/about/</loc>
-    <lastmod>2025-12-06T09:29:16+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/pages/</loc>
-    <lastmod>2025-12-06T09:29:16+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/services/risk-management/</loc>
-    <lastmod>2025-11-28T15:15:34+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/services/bitcoin/</loc>
-    <lastmod>2025-11-28T15:15:26+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/services/technology/</loc>
-    <lastmod>2025-11-28T15:14:54+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/services/cyber-security/</loc>
-    <lastmod>2025-11-28T15:14:39+10:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/contact/</loc>
-    <lastmod>2025-02-22T17:01:34+07:00</lastmod>
-  </url><url>
     <loc>https://icns.ca/</loc>
-    <lastmod>2025-02-12T15:37:57+07:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/services/</loc>
-    <lastmod>2025-02-10T11:52:18+07:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/work/</loc>
-    <lastmod>2025-02-10T11:52:18+07:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/404/</loc>
-    <lastmod>2025-02-10T10:52:03+07:00</lastmod>
-  </url><url>
-    <loc>https://icns.ca/categories/</loc>
-  </url><url>
-    <loc>https://icns.ca/tags/</loc>
+    <lastmod>2026-10-27</lastmod>
   </url>
 </urlset>

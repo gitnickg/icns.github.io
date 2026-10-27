@@ -1,22 +1,13 @@
 {
-  "name": "icns Consulting",
+  "name": "icns consulting inc.",
   "short_name": "icns",
-  "description": "Cybersecurity, GRC, Fintech, Digital Media and Bitcoin consulting",
+  "description": "Independent security consulting, Halifax",
   "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
+  "display": "browser",
+  "background_color": "#f5f7fc",
   "theme_color": "#1c3ed3",
   "icons": [
-    {
-      "src": "/favicon.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/images/icns-logo-circle.png",
-      "sizes": "500x500",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
