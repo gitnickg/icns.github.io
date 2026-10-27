@@ -313,11 +313,6 @@ a:hover { text-decoration-thickness: 2px; }
 .steps h3 { font-size: 1.125rem; margin-bottom: 0.5rem; }
 .steps p { color: var(--ink-soft); }
 
-/* About */
-
-.about-body { max-width: var(--measure); }
-.about-body p + p { margin-top: 1rem; }
-
 /* Contact */
 
 .contact-list {
