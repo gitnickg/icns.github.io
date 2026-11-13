@@ -49,7 +49,7 @@ describe('index.html', () => {
 
   test('copy avoids banned words', () => {
     const all = doc.documentElement.outerHTML.toLowerCase();
-    for (const w of ['wealthsimple', 'atlseccon', 'organizer', 'free consultation', 'trusted', 'discreet', 'hands-on'])
+    for (const w of ['wealthsimple', 'atlseccon', 'organizer', 'free consultation', 'trusted', 'discreet', 'hands-on', 'private'])
       expect(all, w).not.toContain(w);
   });
 

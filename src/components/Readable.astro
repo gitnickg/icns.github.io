@@ -1,5 +1,6 @@
 ---
 import type { Profile } from '../lib/profiles';
+import { isSafeHref } from '../lib/links';
 
 interface Props {
   profiles: Profile[];
@@ -53,7 +54,7 @@ const display = (url: string) => url.replace(/^https:\/\/(www\.)?/, '').replace(
         {
           profiles.map((p) => (
             <li>
-              {p.name}: <a href={p.url} rel="noopener noreferrer">{display(p.url)}</a>
+              {p.name}: {isSafeHref(p.url) ? <a href={p.url} rel="noopener noreferrer">{display(p.url)}</a> : display(p.url)}
               {p.stats && <span class="stats"> ({p.stats})</span>}
             </li>
           ))

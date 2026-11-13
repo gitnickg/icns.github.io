@@ -7,10 +7,27 @@ const submit = async (page: import('@playwright/test').Page, cmd: string) => {
   await input.press('Enter');
 };
 
-test('axe scan of / has zero violations', async ({ page }) => {
-  await page.goto('/');
+const scan = async (page: import('@playwright/test').Page) => {
   const results = await new AxeBuilder({ page }).analyze();
   expect(results.violations).toEqual([]);
+};
+
+test('axe scan of / has zero violations after the intro, and in each theme', async ({ page }) => {
+  await page.goto('/');
+  // Intro is done once the last scripted command (status) has printed its output.
+  await expect(page.locator('[data-term-output]')).toContainText('consulting: open, part-time, remote', { timeout: 15000 });
+  await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true');
+  await scan(page);
+  for (const theme of ['amber', 'green']) {
+    await submit(page, `theme ${theme}`);
+    await expect(page.locator('[data-terminal]')).toHaveAttribute('data-theme', theme);
+    await scan(page);
+  }
+});
+
+test('axe scan of /404.html has zero violations', async ({ page }) => {
+  await page.goto('/404.html');
+  await scan(page);
 });
 
 test('every request during load is same-origin', async ({ page, baseURL }) => {

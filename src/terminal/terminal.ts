@@ -1,5 +1,6 @@
 import { run, complete, INTRO, type Context, type Line, type Theme } from './commands';
 import { startMatrix } from './matrix';
+import { isSafeHref } from '../lib/links';
 
 const PROMPT = 'visitor@icns.ca:~$';
 const STORAGE_KEY = 'icns-terminal-theme';
@@ -30,27 +31,17 @@ function saveTheme(t: Theme): void {
   }
 }
 
-function safeProtocol(href: string): 'https:' | 'mailto:' | null {
-  try {
-    const p = new URL(href).protocol;
-    return p === 'https:' || p === 'mailto:' ? p : null;
-  } catch {
-    return null;
-  }
-}
-
 function renderLine(line: Line): HTMLElement {
   const div = document.createElement('div');
   div.className = 'term-line';
   let any = false;
   for (const seg of line) {
     if (seg.text) any = true;
-    const proto = seg.href ? safeProtocol(seg.href) : null;
-    if (seg.href && proto) {
+    if (isSafeHref(seg.href)) {
       const a = document.createElement('a');
       a.className = 'term-link';
       a.href = seg.href;
-      if (proto === 'https:') a.rel = 'noopener noreferrer';
+      if (seg.href.startsWith('https:')) a.rel = 'noopener noreferrer';
       a.textContent = seg.text;
       div.appendChild(a);
     } else {
@@ -130,6 +121,7 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
   const finishIntro = () => {
     if (introDone) return;
     introDone = true;
+    output.removeAttribute('aria-busy');
     if (timer !== undefined) window.clearTimeout(timer);
     if (typingSpan) {
       typingSpan.textContent = INTRO[introIndex];
@@ -160,6 +152,7 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
     introIndex++;
     if (introIndex >= INTRO.length) {
       introDone = true;
+      output.removeAttribute('aria-busy');
       return;
     }
     timer = window.setTimeout(step, delay * 4);
@@ -168,6 +161,7 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
   // History
   const history: string[] = [];
   let hIdx = 0;
+  let draft = '';
 
   const execute = (cmd: string) => {
     finishIntro();
@@ -176,11 +170,14 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
       history.push(cmd);
     }
     hIdx = history.length;
+    draft = '';
     printResult(cmd);
   };
 
+  const typing = !(reduced || delay <= 0);
+  if (typing) output.setAttribute('aria-busy', 'true');
   output.replaceChildren();
-  if (reduced || delay <= 0) {
+  if (!typing) {
     finishIntro();
   } else {
     step();
@@ -196,16 +193,19 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
   input.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (hIdx > 0) hIdx--;
-      if (history.length) input.value = history[hIdx];
+      if (history.length) {
+        if (hIdx === history.length) draft = input.value;
+        if (hIdx > 0) hIdx--;
+        input.value = history[hIdx];
+      }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (hIdx < history.length - 1) {
         hIdx++;
         input.value = history[hIdx];
-      } else {
+      } else if (hIdx < history.length) {
         hIdx = history.length;
-        input.value = '';
+        input.value = draft;
       }
     } else if (e.key === 'Tab') {
       const val = input.value;

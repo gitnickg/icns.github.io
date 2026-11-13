@@ -206,6 +206,36 @@ describe('mountTerminal', () => {
     expect(output.textContent).toBe(t);
   });
 
+  it('marks the output busy while the intro types, and clears it after', () => {
+    vi.useFakeTimers();
+    mount({ typingDelayMs: 10, reducedMotion: false });
+    expect(output.getAttribute('aria-busy')).toBe('true');
+    vi.advanceTimersByTime(100000);
+    expect(output.hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('clears aria-busy when submit skips the intro, and never sets it with no delay', () => {
+    vi.useFakeTimers();
+    mount({ typingDelayMs: 10, reducedMotion: false });
+    submit('help');
+    expect(output.hasAttribute('aria-busy')).toBe(false);
+    build();
+    mount();
+    expect(output.hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('history: an unsent draft survives ArrowUp then ArrowDown, and ArrowDown alone keeps input', () => {
+    mount();
+    submit('whoami');
+    input.value = 'half typed';
+    key('ArrowDown');
+    expect(input.value).toBe('half typed');
+    key('ArrowUp');
+    expect(input.value).toBe('whoami');
+    key('ArrowDown');
+    expect(input.value).toBe('half typed');
+  });
+
   it('matrix command with reduced motion prints the wake-up line', () => {
     mount();
     submit('matrix');
