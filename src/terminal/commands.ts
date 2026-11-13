@@ -30,7 +30,7 @@ const DESCRIPTIONS: Record<string, string> = {
   profiles: 'find me elsewhere',
   status: 'current availability',
   contact: 'get in touch',
-  'cat security.txt': 'vulnerability disclosure policy',
+  'cat security.txt': 'report a vuln',
   theme: 'change colors',
   clear: 'clear the screen',
 };
