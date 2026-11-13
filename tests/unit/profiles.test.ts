@@ -43,3 +43,26 @@ test('sends headers, signal and correct url', async () => {
   expect(h['Accept']).toBe('application/vnd.github+json');
   expect(seen!.init!.signal).toBeInstanceOf(AbortSignal);
 });
+
+async function authHeader(token: string | undefined): Promise<string | undefined> {
+  const prev = process.env.GITHUB_TOKEN;
+  if (token === undefined) delete process.env.GITHUB_TOKEN;
+  else process.env.GITHUB_TOKEN = token;
+  try {
+    let auth: string | undefined;
+    await loadProfiles((async (_url: string, init?: RequestInit) => {
+      auth = (init!.headers as Record<string, string>)['Authorization'];
+      return new Response('{"public_repos":3}');
+    }) as unknown as typeof fetch);
+    return auth;
+  } finally {
+    if (prev === undefined) delete process.env.GITHUB_TOKEN;
+    else process.env.GITHUB_TOKEN = prev;
+  }
+}
+test('sends Authorization Bearer when GITHUB_TOKEN is set', async () => {
+  expect(await authHeader('tok123')).toBe('Bearer tok123');
+});
+test('sends no Authorization when GITHUB_TOKEN is unset', async () => {
+  expect(await authHeader(undefined)).toBeUndefined();
+});

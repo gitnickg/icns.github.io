@@ -1,11 +1,11 @@
 {
   "name": "icns consulting inc.",
   "short_name": "icns",
-  "description": "Independent security consulting, Halifax",
+  "description": "icns consulting inc. — Halifax, Nova Scotia",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#f5f7fc",
-  "theme_color": "#1c3ed3",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "/images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }

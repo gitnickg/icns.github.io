@@ -4,8 +4,11 @@ export type Profile = { id: string; name: string; handle: string; url: string; s
 
 async function githubStats(handle: string, fetchFn: typeof fetch): Promise<string | undefined> {
   try {
+    const headers: Record<string, string> = { 'User-Agent': 'icns.ca-build', Accept: 'application/vnd.github+json' };
+    const token = process.env.GITHUB_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
     const res = await fetchFn(`https://api.github.com/users/${encodeURIComponent(handle)}`, {
-      headers: { 'User-Agent': 'icns.ca-build', Accept: 'application/vnd.github+json' },
+      headers,
       signal: AbortSignal.timeout(5000),
     });
     if (!res.ok) return undefined;
