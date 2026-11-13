@@ -1,13 +1,18 @@
 ---
+import Base from '../layouts/Base.astro';
+import Terminal from '../components/Terminal.astro';
+import Readable from '../components/Readable.astro';
+import { loadProfiles } from '../lib/profiles';
+import { readSecurityTxt } from '../lib/security-txt';
+
+const profiles = await loadProfiles();
+const ctx = { profiles, securityTxt: readSecurityTxt() };
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>icns.ca</title>
-  </head>
-  <body>
-    <h1>icns.ca</h1>
-  </body>
-</html>
+
+<Base canonical="https://icns.ca/">
+  <a class="skip-link" href="#about">Skip to readable version</a>
+  <main class="page">
+    <Terminal ctx={ctx} />
+    <Readable profiles={profiles} />
+  </main>
+</Base>
