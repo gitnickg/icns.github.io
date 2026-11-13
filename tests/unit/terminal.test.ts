@@ -54,14 +54,14 @@ afterEach(() => {
 });
 
 describe('mountTerminal', () => {
-  it('replaces static intro with the three intro commands and outputs', () => {
+  it('replaces static intro with whoami only', () => {
     mount();
     const t = output.textContent!;
     expect(t).not.toContain('static intro');
-    for (const c of ['whoami', 'profiles', 'status']) expect(t).toContain(`visitor@icns.ca:~$ ${c}`);
+    expect(t).toContain('visitor@icns.ca:~$ whoami');
     expect(t).toContain('Independent Consultant @ icns.ca');
-    expect(t).toContain('linkedin.com/in/gitnickg');
-    expect(t).toContain('bug bounties: active');
+    expect(t).not.toContain('visitor@icns.ca:~$ profiles');
+    expect(t).not.toContain('visitor@icns.ca:~$ status');
   });
 
   it('renders hostile input as literal text', () => {
@@ -168,6 +168,7 @@ describe('mountTerminal', () => {
   it('renders https and mailto as links, other schemes as text', () => {
     mount();
     submit('contact');
+    submit('profiles');
     const mail = output.querySelector<HTMLAnchorElement>('a[href="mailto:hello@icns.ca"]');
     expect(mail).not.toBeNull();
     const gh = output.querySelector<HTMLAnchorElement>('a[href="https://github.com/gitnickg"]');
@@ -186,6 +187,7 @@ describe('mountTerminal', () => {
       },
       { typingDelayMs: 0, reducedMotion: true },
     );
+    submit('profiles');
     expect(output.querySelector('a')).toBeNull();
     expect(output.textContent).toContain('javascript:alert(1)');
   });
@@ -196,12 +198,10 @@ describe('mountTerminal', () => {
     expect(output.textContent).not.toContain('Independent Consultant');
     vi.advanceTimersByTime(30);
     expect(output.textContent).toContain('visitor@icns.ca:~$ ');
-    expect(output.textContent).not.toContain('bug bounties: active');
     submit('contact');
     const t = output.textContent!;
     expect(t).toContain('Independent Consultant @ icns.ca');
-    expect(t).toContain('bug bounties: active');
-    expect(t.indexOf('bug bounties: active')).toBeLessThan(t.indexOf('hello@icns.ca'));
+    expect(t.indexOf('Independent Consultant @ icns.ca')).toBeLessThan(t.indexOf('hello@icns.ca'));
     vi.advanceTimersByTime(10000);
     expect(output.textContent).toBe(t);
   });

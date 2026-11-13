@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Terminal from '../components/Terminal.astro';
-import Readable from '../components/Readable.astro';
 import { loadProfiles } from '../lib/profiles';
 import { readSecurityTxt } from '../lib/security-txt';
 
@@ -10,9 +9,8 @@ const ctx = { profiles, securityTxt: readSecurityTxt() };
 ---
 
 <Base canonical="https://icns.ca/">
-  <a class="skip-link" href="#about">Skip to readable version</a>
   <main class="page">
+    <h1 class="visually-hidden">icns consulting inc.</h1>
     <Terminal ctx={ctx} />
-    <Readable profiles={profiles} />
   </main>
 </Base>

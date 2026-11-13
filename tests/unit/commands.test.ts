@@ -88,4 +88,4 @@ describe('complete', () => {
   });
 });
 
-it('INTRO', () => expect([...INTRO]).toEqual(['whoami', 'profiles', 'status']));
+it('INTRO', () => expect([...INTRO]).toEqual(['whoami']));

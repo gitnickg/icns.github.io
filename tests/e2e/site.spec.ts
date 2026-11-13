@@ -14,8 +14,8 @@ const scan = async (page: import('@playwright/test').Page) => {
 
 test('axe scan of / has zero violations after the intro, and in each theme', async ({ page }) => {
   await page.goto('/');
-  // Intro is done once the last scripted command (status) has printed its output.
-  await expect(page.locator('[data-term-output]')).toContainText('consulting: open, part-time, remote', { timeout: 15000 });
+  // Intro is done once whoami has printed its last line.
+  await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant @ icns.ca', { timeout: 15000 });
   await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true');
   await scan(page);
   for (const theme of ['amber', 'green']) {
@@ -84,10 +84,11 @@ test('Tab from the empty input leaves the terminal', async ({ page }) => {
 
 test.describe('no javascript', () => {
   test.use({ javaScriptEnabled: false });
-  test('intro and contact email are visible', async ({ page }) => {
+  test('whoami intro and footer profile links are visible', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('[data-term-output]')).toContainText('whoami');
-    await expect(page.getByText('hello@icns.ca').first()).toBeVisible();
+    await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant @ icns.ca');
+    await expect(page.getByRole('link', { name: 'GitHub' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
   });
 });
 

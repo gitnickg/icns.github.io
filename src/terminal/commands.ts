@@ -17,7 +17,7 @@ export const PUBLIC_COMMANDS: readonly string[] = [
   'theme',
   'clear',
 ];
-export const INTRO: readonly string[] = ['whoami', 'profiles', 'status'];
+export const INTRO: readonly string[] = ['whoami'];
 
 const THEMES: readonly Theme[] = ['blue', 'green', 'amber'];
 const THEME_USAGE = 'usage: theme blue / green / amber';

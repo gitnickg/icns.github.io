@@ -36,15 +36,21 @@ describe('index.html', () => {
     expect(bad.map((i) => i.outerHTML)).toEqual([]);
   });
 
-  test('readable section carries the facts', () => {
-    const readable = doc.querySelector('[data-readable]');
-    expect(readable).not.toBeNull();
-    const html = readable!.innerHTML;
-    const rtext = readable!.textContent ?? '';
-    for (const s of ['Sr. Security Developer', 'Independent Consultant', 'hello@icns.ca', 'CISSP', 'CCSP', 'Halifax', 'remote'])
-      expect(rtext).toContain(s);
-    for (const s of ['https://github.com/gitnickg', 'https://www.linkedin.com/in/gitnickg/']) expect(html).toContain(s);
-    expect(readable!.querySelector('#contact')).not.toBeNull();
+  test('no readable section; the page h1 names the company', () => {
+    expect(doc.querySelector('[data-readable]')).toBeNull();
+    expect(doc.querySelector('h1')?.textContent).toBe('icns consulting inc.');
+  });
+
+  test('footer has only the copyright and profile icon links', () => {
+    const footer = doc.querySelector('footer#contact')!;
+    expect(footer).not.toBeNull();
+    expect(footer.querySelector('p')?.textContent).toBe('© icns consulting inc., Halifax, Nova Scotia');
+    const links = [...footer.querySelectorAll('a')];
+    expect(links.map((a) => [a.getAttribute('href'), a.getAttribute('aria-label')])).toEqual([
+      ['https://www.linkedin.com/in/gitnickg/', 'LinkedIn'],
+      ['https://github.com/gitnickg', 'GitHub'],
+    ]);
+    for (const a of links) expect(a.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
   });
 
   test('copy avoids banned words', () => {
@@ -59,7 +65,9 @@ describe('index.html', () => {
     const t = (out!.textContent ?? '').replace(/\s+/g, ' ');
     expect(t).toContain('visitor@icns.ca:~$ whoami');
     expect(t).toContain('Sr. Security Developer, CISSP | CCSP');
-    expect(t).toContain('visitor@icns.ca:~$ status');
+    expect(t).toContain('Independent Consultant @ icns.ca');
+    expect(t).not.toContain('visitor@icns.ca:~$ profiles');
+    expect(t).not.toContain('visitor@icns.ca:~$ status');
     expect(out!.getAttribute('aria-live')).toBe('polite');
   });
 
