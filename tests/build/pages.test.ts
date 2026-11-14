@@ -31,6 +31,17 @@ describe('index.html', () => {
     expect(urls.filter((u) => !sameOrigin(u))).toEqual([]);
   });
 
+  test('link previews use the large og.png card', () => {
+    const meta = (sel: string) => doc.querySelector(sel)?.getAttribute('content');
+    expect(meta('meta[property="og:image"]')).toBe('https://icns.ca/images/og.png');
+    expect(meta('meta[property="og:image:width"]')).toBe('1200');
+    expect(meta('meta[property="og:image:height"]')).toBe('630');
+    expect(meta('meta[property="og:image:alt"]')).toBeTruthy();
+    expect(meta('meta[name="twitter:card"]')).toBe('summary_large_image');
+    expect(meta('meta[name="twitter:image"]')).toBe('https://icns.ca/images/og.png');
+    expect(existsSync(join('dist', 'images', 'og.png'))).toBe(true);
+  });
+
   test('every img has width and height', () => {
     const bad = [...doc.querySelectorAll('img')].filter((i) => !i.hasAttribute('width') || !i.hasAttribute('height'));
     expect(bad.map((i) => i.outerHTML)).toEqual([]);
