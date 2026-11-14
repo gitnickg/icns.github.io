@@ -7,7 +7,7 @@ import type { Context } from '../../src/terminal/commands';
 const ctx: Context = {
   profiles: [
     { id: 'linkedin', name: 'LinkedIn', handle: 'gitnickg', url: 'https://www.linkedin.com/in/gitnickg/' },
-    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg', stats: '22 public repos' },
+    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg' },
   ],
   securityTxt: 'Contact: mailto:hello@icns.ca\nExpires: 2030-01-01\n',
 };

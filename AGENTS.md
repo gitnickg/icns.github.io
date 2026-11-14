@@ -10,7 +10,7 @@ Static site for icns consulting inc. (https://icns.ca), Halifax, Nova Scotia. As
 - Keep it accessible: one `h1` per page, visible `:focus-visible` outlines, `width`/`height` on every `<img>`, and respect `prefers-reduced-motion`.
 - Copy: do not name the owner's employer; no "trusted", "private", "hands-on", "discreet" or similar taglines; no AtlSecCon or community organizing.
 - Hidden terminal commands are owner-chosen. Do not add any.
-- Profiles (LinkedIn, GitHub) live in `src/data/profiles.json`. GitHub stats are fetched at build time and the build must still succeed if the API is down.
+- Profiles (LinkedIn, GitHub) live in `src/data/profiles.json`.
 - `sitemap.xml` is generated at build; every new public page must appear in it with absolute URLs (https://icns.ca/...).
 - Optimize new images (WebP or compressed PNG/JPEG, well under 200 KB).
 - Logo: the "scope" mark (four corner brackets around a dot). Brackets use the brand blue (#1c3ed3, #8da2ff on dark), the dot uses ink (#0e1838, #e8ebf6 on dark). Source files are in `public/images/logo/`; lockup text is outlined Schibsted Grotesk Bold.

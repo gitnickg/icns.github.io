@@ -4,7 +4,7 @@ import Terminal from '../components/Terminal.astro';
 import { loadProfiles } from '../lib/profiles';
 import { readSecurityTxt } from '../lib/security-txt';
 
-const profiles = await loadProfiles();
+const profiles = loadProfiles();
 const ctx = { profiles, securityTxt: readSecurityTxt() };
 ---
 

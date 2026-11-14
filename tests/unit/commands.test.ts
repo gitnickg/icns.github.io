@@ -4,7 +4,7 @@ import { run, complete, PUBLIC_COMMANDS, INTRO, type Context } from '../../src/t
 const ctx: Context = {
   profiles: [
     { id: 'linkedin', name: 'LinkedIn', handle: 'gitnickg', url: 'https://www.linkedin.com/in/gitnickg/' },
-    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg', stats: '22 public repos' },
+    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg' },
   ],
   securityTxt: 'Contact: mailto:hello@icns.ca\nExpires: 2030-01-01\n\n',
 };
@@ -35,7 +35,6 @@ describe('run', () => {
     expect(r.lines[1]).toEqual([
       { text: 'github     → ' },
       { text: 'github.com/gitnickg', href: 'https://github.com/gitnickg' },
-      { text: '  (22 public repos)' },
     ]);
   });
   it('status', () => {
