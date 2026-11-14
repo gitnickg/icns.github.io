@@ -4,8 +4,11 @@ Static site for icns consulting inc. (https://icns.ca), Halifax, Nova Scotia. As
 
 ## Rules
 
-- Zero runtime UI framework; the terminal is vanilla TypeScript in `src/terminal/`. No third-party scripts or fonts, no CDN, no trackers or analytics.
-- CSP is `script-src 'self'; style-src 'self'`: no inline `<script>`, no inline `<style>`, no `style` attributes (including in SVG). Built HTML is tested for this.
+- Zero runtime UI framework; the terminal is vanilla TypeScript in `src/terminal/`. No third-party scripts or fonts in the source, no CDN, no trackers. Any analytics is the owner's call and is configured in Cloudflare, not in this repo.
+- Write markup that works under `script-src 'self'; style-src 'self'`: no inline `<script>`, no inline `<style>`, no `style` attributes (including in SVG). Built HTML is tested for this. GitHub Pages cannot send headers; the CSP and other security headers are set by a Cloudflare response-header rule, so changing what the page loads may also need that rule updated.
+- Cloudflare Email Obfuscation must stay off: it rewrites `visitor@icns.ca` in the prompt and injects a script.
+- Fonts: only Schibsted Grotesk 400 and 700 are self-hosted. Don't add weights that nothing uses; hidden text still downloads its font.
+- Link previews use `public/images/og.png` (1200×630), referenced absolutely in `src/layouts/Base.astro`.
 - The site is dark-only. Styles live in `src/styles/` with colors as custom properties on `:root`.
 - Keep it accessible: one `h1` per page, visible `:focus-visible` outlines, `width`/`height` on every `<img>`, and respect `prefers-reduced-motion`.
 - Copy: do not name the owner's employer; no "trusted", "private", "hands-on", "discreet" or similar taglines; no AtlSecCon or community organizing.

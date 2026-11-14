@@ -9,13 +9,6 @@
 }
 @font-face {
   font-family: "Schibsted Grotesk";
-  src: url("/fonts/schibsted-grotesk-latin-500-normal.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Schibsted Grotesk";
   src: url("/fonts/schibsted-grotesk-latin-700-normal.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
@@ -94,6 +87,8 @@ a:hover { text-decoration-thickness: 2px; }
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+  /* Hidden text still triggers font downloads; keep it on the 400 face so a hidden h1 doesn't fetch the bold file. */
+  font-weight: 400;
 }
 
 .page {
