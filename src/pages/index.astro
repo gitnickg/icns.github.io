@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Terminal from '../components/Terminal.astro';
+import { loadProfiles } from '../lib/profiles';
+import { readSecurityTxt } from '../lib/security-txt';
+
+const profiles = await loadProfiles();
+const ctx = { profiles, securityTxt: readSecurityTxt() };
+---
+
+<Base canonical="https://icns.ca/">
+  <main class="page">
+    <h1 class="visually-hidden">icns consulting inc.</h1>
+    <Terminal ctx={ctx} />
+  </main>
+</Base>

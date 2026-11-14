@@ -1,0 +1,4 @@
+[
+  { "id": "linkedin", "name": "LinkedIn", "handle": "gitnickg", "url": "https://www.linkedin.com/in/gitnickg/" },
+  { "id": "github",   "name": "GitHub",   "handle": "gitnickg", "url": "https://github.com/gitnickg" }
+]
