@@ -96,7 +96,7 @@ describe('index.html', () => {
     expect(input).not.toBeNull();
     expect(doc.querySelector(`label[for="${input.id}"]`)).not.toBeNull();
     const chips = [...root.querySelectorAll('[data-term-chips] button[data-cmd]')].map((b) => b.getAttribute('data-cmd'));
-    expect(chips).toEqual(['whoami', 'profiles', 'status', 'contact', 'help']);
+    expect(chips).toEqual(['whoami', 'profiles', 'resume', 'contact', 'help']);
     expect(text).toContain('icns');
   });
 });

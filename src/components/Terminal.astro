@@ -8,7 +8,7 @@ interface Props {
 
 const { ctx } = Astro.props;
 const PROMPT = 'visitor@icns.ca:~$';
-const CHIPS = ['whoami', 'profiles', 'status', 'contact', 'help'];
+const CHIPS = ['whoami', 'profiles', 'resume', 'contact', 'help'];
 
 const isBlank = (line: Line) => !line.some((s) => s.text);
 const intro = INTRO.map((cmd) => ({ cmd, lines: run(cmd, ctx).lines }));

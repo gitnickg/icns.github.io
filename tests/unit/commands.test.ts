@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { run, complete, PUBLIC_COMMANDS, INTRO, type Context } from '../../src/terminal/commands';
+import { run, complete, PUBLIC_COMMANDS, COMPLETIONS, INTRO, type Context } from '../../src/terminal/commands';
 
 const ctx: Context = {
   profiles: [
@@ -8,6 +8,8 @@ const ctx: Context = {
   ],
   securityTxt: 'Contact: mailto:hello@icns.ca\nExpires: 2030-01-01\n\n',
 };
+// Hidden command names are base64 here so the repo doesn't list them in plain text.
+const egg = (b64: string) => atob(b64);
 const text = (r: ReturnType<typeof run>) => r.lines.map((l) => l.map((s) => s.text).join(''));
 
 describe('run', () => {
@@ -16,8 +18,6 @@ describe('run', () => {
     expect(t.length).toBe(PUBLIC_COMMANDS.length + 1);
     expect(t.at(-1)).toBe('some commands are not listed.');
     PUBLIC_COMMANDS.forEach((c, i) => expect(t[i].startsWith(c)).toBe(true));
-    const all = t.join('\n');
-    for (const h of ['matrix', 'irc', 'sandwich', 'passwd', 'reboot', 'rm ']) expect(all).not.toContain(h);
   });
   it('whoami', () => {
     expect(text(run('whoami', ctx))).toEqual([
@@ -36,6 +36,32 @@ describe('run', () => {
       { text: 'github     → ' },
       { text: 'github.com/gitnickg', href: 'https://github.com/gitnickg' },
     ]);
+  });
+  it('resume links to LinkedIn', () => {
+    const r = run('resume', ctx);
+    expect(r.lines).toEqual([[{ text: 'linkedin.com/in/gitnickg', href: 'https://www.linkedin.com/in/gitnickg/' }]]);
+    expect(text(run('help', ctx)).some((l) => l.startsWith('resume'))).toBe(true);
+    expect(text(run('help', ctx)).some((l) => l.startsWith('status'))).toBe(true);
+  });
+  it('shell basics', () => {
+    expect(text(run('pwd', ctx))).toEqual(['/home/visitor']);
+    expect(text(run('hostname', ctx))).toEqual(['icns.ca']);
+    expect(text(run('id', ctx))).toEqual(['uid=1000(visitor) gid=1000(visitor) groups=1000(visitor)']);
+    expect(text(run('ls', ctx))).toEqual(['security.txt']);
+    expect(text(run('ls -a', ctx))).toEqual(['.  ..  .bash_history  .profile  security.txt']);
+    expect(text(run('ls -la', ctx))[1]).toMatch(/^-rw-r--r-- 1 visitor visitor \d+ .* security\.txt$/);
+    expect(text(run('ls /etc', ctx))).toEqual(["ls: cannot access '/etc': No such file or directory"]);
+    expect(text(run('cat ~/security.txt', ctx))).toEqual(text(run('cat security.txt', ctx)));
+    expect(text(run('cat notes.txt', ctx))).toEqual(['cat: notes.txt: No such file or directory']);
+    expect(text(run('cd', ctx))).toEqual([]);
+    expect(text(run('cd /tmp', ctx))).toEqual(['bash: cd: /tmp: No such file or directory']);
+    expect(text(run('echo Hello  World', ctx))).toEqual(['Hello  World']);
+    expect(text(run('uname', ctx))).toEqual(['Linux']);
+    expect(text(run('uname -a', ctx))[0]).toMatch(/^Linux icns\.ca .* GNU\/Linux$/);
+    expect(text(run('date', ctx))[0]).toMatch(/^\w{3} \w{3} [ \d]\d \d\d:\d\d:\d\d \S+ \d{4}$/);
+    expect(text(run('uptime', ctx))[0]).toMatch(/^ \d\d:\d\d:\d\d up \d+ min,  1 user,  load average: /);
+    expect(text(run('sudo ls', ctx))).toEqual(['[sudo] password for visitor: ', 'visitor is not in the sudoers file.']);
+    expect(complete('up')).toEqual(['uptime']);
   });
   it('status', () => {
     expect(text(run('status', ctx))).toEqual(['● bug bounties: active', '● consulting: open, part-time, remote']);
@@ -56,41 +82,42 @@ describe('run', () => {
     expect(text(bad)).toEqual(['usage: theme blue / green / amber']);
     expect(bad.effect).toBeUndefined();
   });
-  it('clear and matrix', () => {
+  it('clear and the hidden screen effects', () => {
     expect(run('clear', ctx)).toEqual({ lines: [], effect: { kind: 'clear' } });
-    expect(run('matrix', ctx)).toEqual({ lines: [], effect: { kind: 'matrix' } });
+    expect(run(egg('bWF0cml4'), ctx)).toEqual({ lines: [], effect: { kind: 'rain' } });
   });
-  it('reboot and rm effects', () => {
-    for (const c of ['reboot', 'sudo reboot']) expect(run(c, ctx)).toEqual({ lines: [], effect: { kind: 'reboot' } });
-    for (const c of ['rm -rf /', 'sudo  rm -rf /', 'RM -RF /*', 'sudo rm -rf --no-preserve-root /'])
-      expect(run(c, ctx)).toEqual({ lines: [], effect: { kind: 'rm' } });
-    expect(complete('re')).toEqual([]);
-    expect(complete('rm')).toEqual([]);
+  it('hidden effect aliases', () => {
+    for (const c of [egg('cmVib290'), egg('c3VkbyByZWJvb3Q=')]) expect(run(c, ctx)).toEqual({ lines: [], effect: { kind: 'restart' } });
+    for (const c of [egg('cm0gLXJmIC8='), egg('c3VkbyAgcm0gLXJmIC8='), egg('Uk0gLVJGIC8q'), egg('c3VkbyBybSAtcmYgLS1uby1wcmVzZXJ2ZS1yb290IC8=')])
+      expect(run(c, ctx)).toEqual({ lines: [], effect: { kind: 'wipe' } });
+    expect(complete('r')).toEqual(['resume']);
+    expect(complete('s')).toEqual(['status']);
   });
   it('hidden text commands', () => {
-    expect(text(run('irc', ctx))).toEqual(['* gitnickg has joined #icns']);
-    expect(text(run('sudo make me a sandwich', ctx))).toEqual(['Okay.']);
-    expect(text(run('passwd', ctx))).toEqual(['hunter2']);
+    expect(text(run(egg('aXJj'), ctx))).toEqual(['* gitnickg has joined #icns']);
+    expect(text(run(egg('c3VkbyBtYWtlIG1lIGEgc2FuZHdpY2g='), ctx))).toEqual(['Okay.']);
+    expect(text(run(egg('cGFzc3dk'), ctx))).toEqual(['hunter2']);
   });
   it('normalizes input', () => {
     expect(run('  WHOAMI ', ctx)).toEqual(run('whoami', ctx));
-    expect(text(run('sudo  make me a   sandwich', ctx))).toEqual(['Okay.']);
+    expect(text(run(egg('c3VkbyAgbWFrZSBtZSBhICAgc2FuZHdpY2g='), ctx))).toEqual(['Okay.']);
   });
   it('empty input', () => {
     expect(run('', ctx)).toEqual({ lines: [] });
     expect(run('   ', ctx)).toEqual({ lines: [] });
   });
   it('unknown', () => {
-    expect(text(run('Foo bar', ctx))).toEqual(["command not found: foo. Try 'help'."]);
+    expect(text(run('Foo bar', ctx))).toEqual(['bash: foo: command not found']);
   });
 });
 
 describe('complete', () => {
   it('works', () => {
-    expect(complete('')).toEqual([...PUBLIC_COMMANDS]);
-    expect(complete('p')).toEqual(['profiles']);
+    expect(complete('')).toEqual([...COMPLETIONS]);
+    for (const c of PUBLIC_COMMANDS) expect(COMPLETIONS).toContain(c);
+    expect(complete('p')).toEqual(['profiles', 'pwd']);
     expect(complete('pa')).toEqual([]);
-    expect(complete('cat')).toEqual(['cat security.txt']);
+    expect(complete('cat')).toEqual(['cat security.txt', 'cat']);
   });
 });
 

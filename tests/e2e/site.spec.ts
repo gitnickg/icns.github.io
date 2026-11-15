@@ -7,6 +7,8 @@ const submit = async (page: import('@playwright/test').Page, cmd: string) => {
   await input.press('Enter');
 };
 
+// Hidden command names are base64 here so the repo doesn't list them in plain text.
+const egg = (b64: string) => atob(b64);
 const scan = async (page: import('@playwright/test').Page) => {
   const results = await new AxeBuilder({ page }).analyze();
   expect(results.violations).toEqual([]);
@@ -39,10 +41,10 @@ test('every request during load is same-origin', async ({ page, baseURL }) => {
   for (const u of urls) expect(new URL(u).origin).toBe(origin);
 });
 
-test('passwd and help show the easter eggs', async ({ page }) => {
+test('a hidden command answers and help hints at more', async ({ page }) => {
   await page.goto('/');
   const out = page.locator('[data-term-output]');
-  await submit(page, 'passwd');
+  await submit(page, egg('cGFzc3dk'));
   await expect(out).toContainText('hunter2');
   await submit(page, 'help');
   await expect(out).toContainText('some commands are not listed.');
@@ -51,12 +53,12 @@ test('passwd and help show the easter eggs', async ({ page }) => {
 test.describe('mobile', () => {
   const { defaultBrowserType: _ignored, ...iphone } = devices['iPhone 13'];
   test.use({ ...iphone });
-  test('tapping the status chip runs it', async ({ page }) => {
+  test('tapping the resume chip links to LinkedIn', async ({ page }) => {
     await page.goto('/');
-    const chip = page.locator('[data-term-chips] button[data-cmd="status"]');
+    const chip = page.locator('[data-term-chips] button[data-cmd="resume"]');
     await expect(chip).toBeVisible();
     await chip.tap();
-    await expect(page.locator('[data-term-output]')).toContainText('consulting: open, part-time, remote');
+    await expect(page.locator('[data-term-output] a[href="https://www.linkedin.com/in/gitnickg/"]')).toBeVisible();
   });
 });
 
@@ -94,27 +96,27 @@ test.describe('no javascript', () => {
 
 test.describe('reduced motion', () => {
   test.use({ reducedMotion: 'reduce' });
-  test('matrix prints the message and no canvas', async ({ page }) => {
+  test('rain prints the message and no canvas', async ({ page }) => {
     await page.goto('/');
-    await submit(page, 'matrix');
+    await submit(page, egg('bWF0cml4'));
     await expect(page.locator('[data-term-output]')).toContainText('wake up, visitor…');
     await expect(page.locator('canvas')).toHaveCount(0);
   });
-  test('reboot and rm -rf / print text only', async ({ page }) => {
+  test('restart and wipe print text only', async ({ page }) => {
     await page.goto('/');
-    await submit(page, 'rm -rf /');
+    await submit(page, egg('cm0gLXJmIC8='));
     await expect(page.locator('[data-term-output]')).toContainText("refusing to remove '/'");
     await expect(page.locator('.rm-gone')).toHaveCount(0);
-    await submit(page, 'reboot');
-    await expect(page.locator('[data-term-output]')).toContainText('icns login: visitor');
+    await submit(page, egg('cmVib290'));
+    await expect(page.locator('[data-term-output]')).toContainText('icns.ca login: visitor');
     await expect(page.locator('input[data-term-input]')).toBeEnabled();
   });
 });
 
-test('rm -rf / empties the page and brings it back', async ({ page }) => {
+test('wipe empties the page and brings it back', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true', { timeout: 15000 });
-  await submit(page, 'rm -rf /');
+  await submit(page, egg('cm0gLXJmIC8='));
   await expect(page.locator('[data-terminal]')).toBeHidden({ timeout: 6000 });
   await expect(page.locator('.site-footer')).toBeHidden();
   await expect(page.locator('[data-terminal]')).toBeVisible({ timeout: 6000 });
@@ -122,10 +124,10 @@ test('rm -rf / empties the page and brings it back', async ({ page }) => {
   await expect(page.locator('[data-term-output]')).toContainText("removed '/'");
 });
 
-test('reboot boots back to whoami', async ({ page }) => {
+test('restart boots back to whoami', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true', { timeout: 15000 });
-  await submit(page, 'reboot');
+  await submit(page, egg('cmVib290'));
   await expect(page.locator('[data-term-output]')).toContainText('Reached target multi-user.target', { timeout: 8000 });
   await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant', { timeout: 8000 });
   await expect(page.locator('input[data-term-input]')).toBeEnabled();

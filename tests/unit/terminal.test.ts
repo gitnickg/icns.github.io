@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mountTerminal } from '../../src/terminal/terminal';
-import { startMatrix } from '../../src/terminal/matrix';
+import { startRain } from '../../src/terminal/rain';
 import type { Context } from '../../src/terminal/commands';
 
+// Hidden command names are base64 here so the repo doesn't list them in plain text.
+const egg = (b64: string) => atob(b64);
 const ctx: Context = {
   profiles: [
     { id: 'linkedin', name: 'LinkedIn', handle: 'gitnickg', url: 'https://www.linkedin.com/in/gitnickg/' },
@@ -236,26 +238,26 @@ describe('mountTerminal', () => {
     expect(input.value).toBe('half typed');
   });
 
-  it('matrix command with reduced motion prints the wake-up line', () => {
+  it('rain command with reduced motion prints the wake-up line', () => {
     mount();
-    submit('matrix');
+    submit(egg('bWF0cml4'));
     expect(output.textContent).toContain('wake up, visitor…');
     expect(root.querySelector('canvas')).toBeNull();
   });
 
-  it('reboot with reduced motion prints the boot log then whoami, prompt usable', () => {
+  it('restart with reduced motion prints the boot log then whoami, prompt usable', () => {
     mount();
-    submit('reboot');
+    submit(egg('cmVib290'));
     const t = output.textContent!;
-    expect(t).toContain('icns login: visitor');
+    expect(t).toContain('icns.ca login: visitor');
     expect(t.indexOf('login')).toBeLessThan(t.indexOf('Independent Consultant'));
     expect(input.disabled).toBe(false);
   });
 
-  it('reboot animates, locks the prompt, and a key press skips to the end', () => {
+  it('restart animates, locks the prompt, and a key press skips to the end', () => {
     vi.useFakeTimers();
     mount({ reducedMotion: false });
-    submit('reboot');
+    submit(egg('cmVib290'));
     expect(input.disabled).toBe(true);
     expect(output.textContent).toContain('going down for reboot');
     vi.advanceTimersByTime(800);
@@ -267,18 +269,18 @@ describe('mountTerminal', () => {
     expect(input.disabled).toBe(false);
   });
 
-  it('rm -rf / with reduced motion refuses and hides nothing', () => {
+  it('wipe with reduced motion refuses and hides nothing', () => {
     mount();
-    submit('rm -rf /');
+    submit(egg('cm0gLXJmIC8='));
     expect(output.textContent).toContain("refusing to remove '/'");
     expect(document.querySelector('.rm-gone')).toBeNull();
   });
 
-  it('rm -rf / hides parts of the page, then restores everything', () => {
+  it('wipe hides parts of the page, then restores everything', () => {
     vi.useFakeTimers();
     document.body.insertAdjacentHTML('beforeend', '<footer class="site-footer">f</footer>');
     mount({ reducedMotion: false });
-    submit('rm -rf /');
+    submit(egg('cm0gLXJmIC8='));
     vi.advanceTimersByTime(500);
     expect(document.querySelector('.site-footer')!.classList.contains('rm-gone')).toBe(true);
     expect(input.disabled).toBe(true);
@@ -291,16 +293,16 @@ describe('mountTerminal', () => {
   });
 });
 
-describe('startMatrix', () => {
+describe('startRain', () => {
   it('reduced motion prints one line and returns a no-op stop', () => {
-    const stop = startMatrix(output, true);
+    const stop = startRain(output, true);
     expect(output.textContent).toContain('wake up, visitor…');
     expect(() => stop()).not.toThrow();
   });
 
   it('without a canvas context it stops cleanly and leaves no canvas', () => {
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
-    const stop = startMatrix(root, false);
+    const stop = startRain(root, false);
     expect(root.querySelector('canvas')).toBeNull();
     expect(() => stop()).not.toThrow();
   });
@@ -309,8 +311,8 @@ describe('startMatrix', () => {
     const fakeCtx = new Proxy({}, { get: () => () => undefined, set: () => true });
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(fakeCtx as never);
     for (const ev of [new KeyboardEvent('keydown', { key: 'a' }), new Event('pointerdown'), new KeyboardEvent('keydown', { key: 'Escape' })]) {
-      const stop = startMatrix(root, false);
-      expect(root.querySelector('canvas.term-matrix')).not.toBeNull();
+      const stop = startRain(root, false);
+      expect(root.querySelector('canvas.term-rain')).not.toBeNull();
       window.dispatchEvent(ev);
       expect(root.querySelector('canvas')).toBeNull();
       stop();

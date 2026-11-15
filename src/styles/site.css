@@ -217,7 +217,7 @@ a:hover { text-decoration-thickness: 2px; }
 .term-chips button:hover { border-color: var(--term-accent); color: var(--term-accent); }
 .term-chips button:focus-visible { outline-color: var(--term-accent); }
 
-.term-matrix {
+.term-rain {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -225,7 +225,7 @@ a:hover { text-decoration-thickness: 2px; }
   pointer-events: none;
 }
 
-/* Hidden-command effects: reboot blanks the screen, rm makes parts of the page disappear. */
+/* Hidden-command effects: one blanks the screen, one makes parts of the page disappear. */
 .terminal .term-body,
 .terminal .term-chips,
 .terminal .term-chrome,
