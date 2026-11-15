@@ -19,8 +19,11 @@ export function startRain(container: HTMLElement, reducedMotion: boolean): () =>
 
   const width = container.clientWidth || window.innerWidth || 800;
   const height = container.clientHeight || window.innerHeight || 600;
-  canvas.width = width;
-  canvas.height = height;
+  // Back the canvas at device resolution so glyphs stay sharp on high-DPI screens; draw in CSS pixels.
+  const dpr = Math.min(window.devicePixelRatio || 1, 3);
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  g.scale(dpr, dpr);
   container.appendChild(canvas);
 
   const size = 16;

@@ -399,6 +399,21 @@ describe('startRain', () => {
     expect(() => stop()).not.toThrow();
   });
 
+  it('backs the canvas at device pixel ratio and draws in CSS pixels', () => {
+    const scale = vi.fn();
+    const fakeCtx = new Proxy({}, { get: (_, k) => (k === 'scale' ? scale : () => undefined), set: () => true });
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(fakeCtx as never);
+    vi.spyOn(window, 'devicePixelRatio', 'get').mockReturnValue(2);
+    vi.spyOn(root, 'clientWidth', 'get').mockReturnValue(400);
+    vi.spyOn(root, 'clientHeight', 'get').mockReturnValue(300);
+    const stop = startRain(root, false);
+    const canvas = root.querySelector<HTMLCanvasElement>('canvas.term-rain');
+    expect(canvas?.width).toBe(800);
+    expect(canvas?.height).toBe(600);
+    expect(scale).toHaveBeenCalledWith(2, 2);
+    stop();
+  });
+
   it('stops on keydown, pointerdown and Escape', () => {
     const fakeCtx = new Proxy({}, { get: () => () => undefined, set: () => true });
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(fakeCtx as never);

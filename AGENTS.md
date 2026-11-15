@@ -9,7 +9,8 @@ Static site for icns consulting inc. (https://icns.ca), Halifax, Nova Scotia. As
 - Cloudflare Email Obfuscation must stay off: it rewrites `visitor@icns.ca` in the prompt and injects a script.
 - Fonts: only Schibsted Grotesk 400 and 700 are self-hosted. Don't add weights that nothing uses; hidden text still downloads its font.
 - Link previews use `public/images/og.png` (1200×630), referenced absolutely in `src/layouts/Base.astro`.
-- The site is dark-only. Styles live in `src/styles/` with colors as custom properties on `:root`.
+- The page is dark (`color-scheme: dark`); only the terminal's `default` theme follows the system scheme (Catppuccin Frappé dark, Latte light). Styles live in `src/styles/` with colors as custom properties on `:root`.
+- `Base.astro` preloads the 400-weight font; update that link if the font file changes.
 - Keep it accessible: one `h1` per page, visible `:focus-visible` outlines, `width`/`height` on every `<img>`, and respect `prefers-reduced-motion`.
 - Copy: do not name the owner's employer; no "trusted", "private", "hands-on", "discreet" or similar taglines; no AtlSecCon or community organizing.
 - Hidden terminal commands are owner-chosen. Do not add any.
