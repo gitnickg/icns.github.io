@@ -242,6 +242,53 @@ describe('mountTerminal', () => {
     expect(output.textContent).toContain('wake up, visitor…');
     expect(root.querySelector('canvas')).toBeNull();
   });
+
+  it('reboot with reduced motion prints the boot log then whoami, prompt usable', () => {
+    mount();
+    submit('reboot');
+    const t = output.textContent!;
+    expect(t).toContain('icns login: visitor');
+    expect(t.indexOf('login')).toBeLessThan(t.indexOf('Independent Consultant'));
+    expect(input.disabled).toBe(false);
+  });
+
+  it('reboot animates, locks the prompt, and a key press skips to the end', () => {
+    vi.useFakeTimers();
+    mount({ reducedMotion: false });
+    submit('reboot');
+    expect(input.disabled).toBe(true);
+    expect(output.textContent).toContain('going down for reboot');
+    vi.advanceTimersByTime(800);
+    expect(root.classList.contains('term-off')).toBe(true);
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'x' }));
+    expect(root.classList.contains('term-off')).toBe(false);
+    expect(output.textContent).toContain('Last login');
+    expect(output.textContent).toContain('Independent Consultant');
+    expect(input.disabled).toBe(false);
+  });
+
+  it('rm -rf / with reduced motion refuses and hides nothing', () => {
+    mount();
+    submit('rm -rf /');
+    expect(output.textContent).toContain("refusing to remove '/'");
+    expect(document.querySelector('.rm-gone')).toBeNull();
+  });
+
+  it('rm -rf / hides parts of the page, then restores everything', () => {
+    vi.useFakeTimers();
+    document.body.insertAdjacentHTML('beforeend', '<footer class="site-footer">f</footer>');
+    mount({ reducedMotion: false });
+    submit('rm -rf /');
+    vi.advanceTimersByTime(500);
+    expect(document.querySelector('.site-footer')!.classList.contains('rm-gone')).toBe(true);
+    expect(input.disabled).toBe(true);
+    vi.advanceTimersByTime(4000);
+    expect(root.classList.contains('rm-gone')).toBe(true);
+    vi.advanceTimersByTime(3000);
+    expect(document.querySelector('.rm-gone')).toBeNull();
+    expect(output.textContent).toContain("removed '/'");
+    expect(input.disabled).toBe(false);
+  });
 });
 
 describe('startMatrix', () => {

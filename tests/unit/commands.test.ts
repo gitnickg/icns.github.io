@@ -17,7 +17,7 @@ describe('run', () => {
     expect(t.at(-1)).toBe('some commands are not listed.');
     PUBLIC_COMMANDS.forEach((c, i) => expect(t[i].startsWith(c)).toBe(true));
     const all = t.join('\n');
-    for (const h of ['matrix', 'irc', 'sandwich', 'passwd']) expect(all).not.toContain(h);
+    for (const h of ['matrix', 'irc', 'sandwich', 'passwd', 'reboot', 'rm ']) expect(all).not.toContain(h);
   });
   it('whoami', () => {
     expect(text(run('whoami', ctx))).toEqual([
@@ -59,6 +59,13 @@ describe('run', () => {
   it('clear and matrix', () => {
     expect(run('clear', ctx)).toEqual({ lines: [], effect: { kind: 'clear' } });
     expect(run('matrix', ctx)).toEqual({ lines: [], effect: { kind: 'matrix' } });
+  });
+  it('reboot and rm effects', () => {
+    for (const c of ['reboot', 'sudo reboot']) expect(run(c, ctx)).toEqual({ lines: [], effect: { kind: 'reboot' } });
+    for (const c of ['rm -rf /', 'sudo  rm -rf /', 'RM -RF /*', 'sudo rm -rf --no-preserve-root /'])
+      expect(run(c, ctx)).toEqual({ lines: [], effect: { kind: 'rm' } });
+    expect(complete('re')).toEqual([]);
+    expect(complete('rm')).toEqual([]);
   });
   it('hidden text commands', () => {
     expect(text(run('irc', ctx))).toEqual(['* gitnickg has joined #icns']);

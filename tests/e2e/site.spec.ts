@@ -100,6 +100,36 @@ test.describe('reduced motion', () => {
     await expect(page.locator('[data-term-output]')).toContainText('wake up, visitor…');
     await expect(page.locator('canvas')).toHaveCount(0);
   });
+  test('reboot and rm -rf / print text only', async ({ page }) => {
+    await page.goto('/');
+    await submit(page, 'rm -rf /');
+    await expect(page.locator('[data-term-output]')).toContainText("refusing to remove '/'");
+    await expect(page.locator('.rm-gone')).toHaveCount(0);
+    await submit(page, 'reboot');
+    await expect(page.locator('[data-term-output]')).toContainText('icns login: visitor');
+    await expect(page.locator('input[data-term-input]')).toBeEnabled();
+  });
+});
+
+test('rm -rf / empties the page and brings it back', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true', { timeout: 15000 });
+  await submit(page, 'rm -rf /');
+  await expect(page.locator('[data-terminal]')).toBeHidden({ timeout: 6000 });
+  await expect(page.locator('.site-footer')).toBeHidden();
+  await expect(page.locator('[data-terminal]')).toBeVisible({ timeout: 6000 });
+  await expect(page.locator('.rm-gone')).toHaveCount(0);
+  await expect(page.locator('[data-term-output]')).toContainText("removed '/'");
+});
+
+test('reboot boots back to whoami', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true', { timeout: 15000 });
+  await submit(page, 'reboot');
+  await expect(page.locator('[data-term-output]')).toContainText('Reached target multi-user.target', { timeout: 8000 });
+  await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant', { timeout: 8000 });
+  await expect(page.locator('input[data-term-input]')).toBeEnabled();
+  await expect(page.locator('input[data-term-input]')).toBeFocused();
 });
 
 test('/contact/ ends at /#contact', async ({ page }) => {
