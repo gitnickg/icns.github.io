@@ -58,10 +58,30 @@
 [data-theme="pink"] { --term-fg: #ff8ad8; --term-accent: #ffc8ec; --term-cmd: #ffc8ec; }
 
 /* Terminal look-alikes: each terminal's default colours, with its shell's prompt (see src/terminal/shells.ts). */
-[data-theme="default"] {
-  --term-bg: #282c34; --term-chrome: #21252b; --term-border: #3a3f4b; --term-dot: #3a3f4b;
-  --term-fg: #ffffff; --term-accent: #56b6c2; --term-cmd: #ffffff;
-  --p-user: #ffffff; --p-ok: #98c379; --p-dir: #56b6c2;
+/* Default: Catppuccin Frappé in dark mode, Catppuccin Latte in light mode (Ghostty's
+   `theme = dark:Catppuccin Frappe,light:Catppuccin Latte`). Both are also themes of their own.
+   Palette: catppuccin.com (MIT). Latte's green, teal and blue are darkened a little to pass WCAG AA on its light base. */
+[data-theme="default"],
+[data-theme="catppuccin-frappe"] {
+  --term-bg: #303446; --term-chrome: #292c3c; --term-border: #414559; --term-dot: #51576d;
+  --term-fg: #c6d0f5; --term-accent: #8caaee; --term-cmd: #c6d0f5; --term-muted: #a5adce;
+  --p-user: #c6d0f5; --p-ok: #a6d189; --p-dir: #99d1db;
+}
+[data-theme="catppuccin-latte"] {
+  --term-bg: #eff1f5; --term-chrome: #e6e9ef; --term-border: #ccd0da; --term-dot: #bcc0cc;
+  --term-fg: #4c4f69; --term-accent: #1a5ce0; --term-cmd: #4c4f69; --term-muted: #5c5f77;
+  --p-user: #4c4f69; --p-ok: #2e7d1f; --p-dir: #0e767b;
+}
+[data-theme="catppuccin-latte"] .term-logo path { stroke: #1c3ed3; }
+[data-theme="catppuccin-latte"] .term-logo circle { fill: #0e1838; }
+@media (prefers-color-scheme: light) {
+  [data-theme="default"] {
+    --term-bg: #eff1f5; --term-chrome: #e6e9ef; --term-border: #ccd0da; --term-dot: #bcc0cc;
+    --term-fg: #4c4f69; --term-accent: #1a5ce0; --term-cmd: #4c4f69; --term-muted: #5c5f77;
+    --p-user: #4c4f69; --p-ok: #2e7d1f; --p-dir: #0e767b;
+  }
+  [data-theme="default"] .term-logo path { stroke: #1c3ed3; }
+  [data-theme="default"] .term-logo circle { fill: #0e1838; }
 }
 [data-theme="ubuntu"] {
   --term-bg: #300a24; --term-chrome: #2c2c2c; --term-border: #4e1f40; --term-dot: #4a4a4a;
@@ -248,7 +268,8 @@ a:hover { text-decoration-thickness: 2px; }
 .term-prompt .p-dir { color: var(--p-dir, inherit); }
 .term-prompt .p-sym { color: var(--p-sym, inherit); }
 .term-prompt .p-frame { color: var(--p-frame, inherit); }
-.term-prompt { color: var(--term-accent); font-weight: 600; white-space: pre; }
+.term-prompt { color: var(--term-accent); white-space: pre; }
+.term-prompt .p-b { font-weight: 700; }
 .term-cmd { color: var(--term-cmd, var(--ink)); }
 .term-link { color: var(--term-accent); }
 

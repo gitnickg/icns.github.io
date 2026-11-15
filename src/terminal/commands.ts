@@ -9,6 +9,8 @@ export type Line = Segment[];
 export const TERMINALS = ['default', 'ubuntu', 'debian', 'kali', 'macosx', 'cmdline', 'powershell'] as const;
 /** Colour schemes for the default terminal. */
 export const COLORS = [
+  'catppuccin-frappe',
+  'catppuccin-latte',
   'blue',
   'green',
   'amber',

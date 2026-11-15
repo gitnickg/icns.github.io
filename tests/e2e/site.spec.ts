@@ -20,10 +20,23 @@ test('axe scan of / has zero violations after the intro, and in each theme', asy
   await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant @ icns.ca', { timeout: 15000 });
   await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true');
   await scan(page);
-  for (const theme of ['blue', 'ubuntu', 'debian', 'kali', 'macosx', 'cmdline', 'powershell', 'amber', 'green', 'white', 'red', 'cyan', 'purple', 'pink', 'solarized', 'dracula', 'nord', 'gruvbox', 'monokai', 'rainbow']) {
+  for (const theme of ['catppuccin-frappe', 'catppuccin-latte', 'blue', 'ubuntu', 'debian', 'kali', 'macosx', 'cmdline', 'powershell', 'amber', 'green', 'white', 'red', 'cyan', 'purple', 'pink', 'solarized', 'dracula', 'nord', 'gruvbox', 'monokai', 'rainbow']) {
     await submit(page, `theme ${theme}`);
     await expect(page.locator('[data-terminal]')).toHaveAttribute('data-theme', theme);
     await scan(page);
+  }
+});
+
+test.describe('default theme follows the system colour scheme', () => {
+  for (const [scheme, bg] of [['dark', 'rgb(48, 52, 70)'], ['light', 'rgb(239, 241, 245)']] as const) {
+    test(`${scheme}: Catppuccin ${scheme === 'dark' ? 'Frappé' : 'Latte'}, no axe violations`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto('/');
+      await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant @ icns.ca', { timeout: 15000 });
+      await expect(page.locator('[data-terminal]')).toHaveAttribute('data-theme', 'default');
+      await expect(page.locator('[data-terminal]')).toHaveCSS('background-color', bg);
+      await scan(page);
+    });
   }
 });
 

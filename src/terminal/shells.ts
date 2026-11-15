@@ -11,28 +11,46 @@ export type Flavor = 'bash' | 'zsh' | 'cmd' | 'ps';
 export type Os = 'debian' | 'ubuntu' | 'kali' | 'macos' | 'windows';
 export type Env = { shell: Flavor; os: Os };
 
-// The default terminal: a Ghostty-style window running Oh My Zsh's default prompt, with the user and host in front.
+// Each prompt is that terminal's out-of-the-box default, with user `visitor` and host `icns.ca`.
+// `p-b` marks the parts the default prompt draws in bold.
+
+// Default: Ghostty with Oh My Zsh's robbyrussell prompt (bold green arrow, cyan directory), with user@host in front.
 // The colour themes reuse it.
 const DEFAULT_PROMPT: Prompt = {
-  main: [{ text: 'visitor@icns.ca', cls: 'p-user' }, { text: ' ' }, { text: '➜', cls: 'p-ok' }, { text: '  ' }, { text: '~', cls: 'p-dir' }],
+  main: [
+    { text: 'visitor@icns.ca', cls: 'p-user' },
+    { text: ' ' },
+    { text: '➜', cls: 'p-ok p-b' },
+    { text: '  ' },
+    { text: '~', cls: 'p-dir' },
+  ],
 };
 
 const PROMPTS: Partial<Record<Theme, Prompt>> = {
+  // Ubuntu's ~/.bashrc: bold green user@host, bold blue path.
   ubuntu: {
-    main: [{ text: 'visitor@icns', cls: 'p-user' }, { text: ':', cls: 'p-sym' }, { text: '~', cls: 'p-dir' }, { text: '$', cls: 'p-sym' }],
+    main: [
+      { text: 'visitor@icns.ca', cls: 'p-user p-b' },
+      { text: ':', cls: 'p-sym' },
+      { text: '~', cls: 'p-dir p-b' },
+      { text: '$', cls: 'p-sym' },
+    ],
   },
-  debian: { main: [{ text: 'visitor@icns:~$', cls: 'p-sym' }] },
+  // Debian's ~/.bashrc leaves colour off.
+  debian: { main: [{ text: 'visitor@icns.ca:~$', cls: 'p-sym' }] },
+  // Kali's zsh prompt: green frame, bold blue user㉿host, bold path, bold blue $.
   kali: {
     pre: [
       { text: '┌──(', cls: 'p-frame' },
-      { text: 'visitor㉿icns', cls: 'p-user' },
+      { text: 'visitor㉿icns.ca', cls: 'p-user p-b' },
       { text: ')-[', cls: 'p-frame' },
-      { text: '~', cls: 'p-dir' },
+      { text: '~', cls: 'p-dir p-b' },
       { text: ']', cls: 'p-frame' },
     ],
-    main: [{ text: '└─', cls: 'p-frame' }, { text: '$', cls: 'p-user' }],
+    main: [{ text: '└─', cls: 'p-frame' }, { text: '$', cls: 'p-user p-b' }],
   },
-  macosx: { main: [{ text: 'visitor@icns ~ %', cls: 'p-sym' }] },
+  // macOS zsh: %n@%m %1~ %#
+  macosx: { main: [{ text: 'visitor@icns.ca ~ %', cls: 'p-sym' }] },
   cmdline: { main: [{ text: 'C:\\Users\\visitor>', cls: 'p-sym' }] },
   powershell: { main: [{ text: 'PS C:\\Users\\visitor>', cls: 'p-sym' }] },
 };
