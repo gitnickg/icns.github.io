@@ -135,7 +135,7 @@ describe('mountTerminal', () => {
   });
 
   it('defaults to blue and ignores invalid stored theme', () => {
-    localStorage.setItem('icns-terminal-theme', 'pink');
+    localStorage.setItem('icns-terminal-theme', 'plaid');
     mount();
     expect(root.dataset.theme).toBe('blue');
   });
@@ -151,6 +151,31 @@ describe('mountTerminal', () => {
     expect(root.dataset.theme).toBe('blue');
     submit('theme green');
     expect(root.dataset.theme).toBe('green');
+  });
+
+  it('rainbow colours each character, keeps plain text for screen readers, and stops on another theme', async () => {
+    mount();
+    submit('theme rainbow');
+    await Promise.resolve();
+    const painted = output.querySelectorAll('.rb');
+    expect(painted.length).toBeGreaterThan(0);
+    for (const rb of painted) {
+      const [sr, shown] = rb.children;
+      expect(sr.className).toBe('visually-hidden');
+      expect(shown.getAttribute('aria-hidden')).toBe('true');
+      expect(shown.textContent).toBe(sr.textContent);
+      for (const ch of shown.children) expect(ch.className).toMatch(/^rb\d+$/);
+    }
+    expect(output.querySelector('[style]')).toBeNull();
+    submit('pwd');
+    await Promise.resolve();
+    expect(output.lastElementChild!.querySelector('.rb')).not.toBeNull();
+    submit('theme blue');
+    await Promise.resolve();
+    submit('pwd');
+    await Promise.resolve();
+    expect(output.lastElementChild!.querySelector('.rb')).toBeNull();
+    expect(output.lastElementChild!.textContent).toBe('/home/visitor');
   });
 
   it('clear empties the output', () => {

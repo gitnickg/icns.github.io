@@ -1,11 +1,11 @@
-import { run, complete, INTRO, type Context, type Line, type Theme } from './commands';
+import { run, complete, INTRO, THEMES, type Context, type Line, type Theme } from './commands';
 import { startRain } from './rain';
 import { startRestart, startWipe } from './effects';
+import { startRainbow } from './rainbow';
 import { isSafeHref } from '../lib/links';
 
 const PROMPT = 'visitor@icns.ca:~$';
 const STORAGE_KEY = 'icns-terminal-theme';
-const THEMES: readonly Theme[] = ['blue', 'green', 'amber'];
 
 export type TerminalOptions = { reducedMotion?: boolean; typingDelayMs?: number };
 
@@ -68,8 +68,11 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
   const reduced = opts.reducedMotion ?? prefersReducedMotion();
   const delay = opts.typingDelayMs ?? 35;
 
+  let stopRainbow: (() => void) | null = null;
   const applyTheme = (t: Theme) => {
     root.dataset.theme = t;
+    stopRainbow?.();
+    stopRainbow = t === 'rainbow' ? startRainbow(output) : null;
   };
   applyTheme(readTheme());
 

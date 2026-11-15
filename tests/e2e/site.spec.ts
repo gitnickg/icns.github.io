@@ -20,7 +20,7 @@ test('axe scan of / has zero violations after the intro, and in each theme', asy
   await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant @ icns.ca', { timeout: 15000 });
   await expect(page.locator('[data-term-output]')).not.toHaveAttribute('aria-busy', 'true');
   await scan(page);
-  for (const theme of ['amber', 'green']) {
+  for (const theme of ['amber', 'green', 'white', 'red', 'cyan', 'purple', 'pink', 'solarized', 'dracula', 'nord', 'gruvbox', 'monokai', 'rainbow']) {
     await submit(page, `theme ${theme}`);
     await expect(page.locator('[data-terminal]')).toHaveAttribute('data-theme', theme);
     await scan(page);
