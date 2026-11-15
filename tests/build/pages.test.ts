@@ -84,7 +84,7 @@ describe('index.html', () => {
     expect(t).toContain('Independent Consultant @ icns.ca');
     expect(t).not.toContain('~ profiles');
     expect(t).not.toContain('~ status');
-    expect(doc.querySelector('[data-terminal]')!.getAttribute('data-theme')).toBe('ghostty');
+    expect(doc.querySelector('[data-terminal]')!.getAttribute('data-theme')).toBe('default');
     expect(out!.getAttribute('aria-live')).toBe('polite');
   });
 

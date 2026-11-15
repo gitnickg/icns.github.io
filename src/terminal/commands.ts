@@ -6,8 +6,8 @@ import { osCommand, osCompletions } from './os';
 export type Segment = { text: string; href?: string };
 export type Line = Segment[];
 /** Terminal look-alikes, each with its own prompt, shell and OS. */
-export const TERMINALS = ['ghostty', 'ubuntu', 'debian', 'kali', 'macosx', 'cmdline', 'powershell'] as const;
-/** Colour schemes for the default ghostty terminal. */
+export const TERMINALS = ['default', 'ubuntu', 'debian', 'kali', 'macosx', 'cmdline', 'powershell'] as const;
+/** Colour schemes for the default terminal. */
 export const COLORS = [
   'blue',
   'green',
@@ -26,7 +26,7 @@ export const COLORS = [
 ] as const;
 export const THEMES = [...TERMINALS, ...COLORS] as const;
 export type Theme = (typeof THEMES)[number];
-export const DEFAULT_THEME: Theme = 'ghostty';
+export const DEFAULT_THEME: Theme = 'default';
 export type Effect = { kind: 'clear' } | { kind: 'rain' } | { kind: 'restart' } | { kind: 'wipe' } | { kind: 'theme'; theme: Theme };
 export type Context = { profiles: Profile[]; securityTxt: string };
 export type Result = { lines: Line[]; effect?: Effect };
@@ -47,7 +47,7 @@ export const INTRO: readonly string[] = ['whoami'];
 const THEME_USAGE: Line[] = [
   [{ text: 'usage: theme <name>' }],
   [{ text: `terminals: ${TERMINALS.join(' ')}` }],
-  [{ text: `colors (ghostty): ${COLORS.join(' ')}` }],
+  [{ text: `colors (default): ${COLORS.join(' ')}` }],
 ];
 
 const plain = (s: string): Line => [{ text: s }];
