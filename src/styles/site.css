@@ -23,6 +23,7 @@
   --ink-soft: #a6aecb;
   --rule: #232c4f;
   --blue: #8da2ff;
+  --maple: #e0301e;
 
   --term-bg: #070b17;
   --term-chrome: #121a33;
@@ -241,6 +242,14 @@ a:hover { text-decoration-thickness: 2px; }
   align-items: center;
 }
 .site-footer p { margin: 0; }
+.maple-leaf {
+  display: inline-block;
+  margin-left: 0.5em;
+  vertical-align: -0.15em;
+  color: var(--maple);
+  cursor: default;
+}
+.maple-leaf svg { display: block; }
 .site-footer a { color: var(--ink-soft); }
 .site-footer a:hover { color: var(--blue); }
 .footer-links {

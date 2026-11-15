@@ -62,6 +62,10 @@ describe('index.html', () => {
       ['https://github.com/gitnickg', 'GitHub'],
     ]);
     for (const a of links) expect(a.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+    const leaf = footer.querySelector('p .maple-leaf')!;
+    expect(leaf.getAttribute('title')).toBe('Canada');
+    expect(leaf.getAttribute('aria-label')).toBe('Canada');
+    expect(leaf.closest('a')).toBeNull();
   });
 
   test('copy avoids banned words', () => {
