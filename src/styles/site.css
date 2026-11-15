@@ -57,6 +57,45 @@
 [data-theme="purple"] { --term-fg: #c3a6ff; --term-accent: #e2d4ff; --term-cmd: #e2d4ff; }
 [data-theme="pink"] { --term-fg: #ff8ad8; --term-accent: #ffc8ec; --term-cmd: #ffc8ec; }
 
+/* Terminal look-alikes: each terminal's default colours, with its shell's prompt (see src/terminal/shells.ts). */
+[data-theme="ghostty"] {
+  --term-bg: #282c34; --term-chrome: #21252b; --term-border: #3a3f4b; --term-dot: #3a3f4b;
+  --term-fg: #ffffff; --term-accent: #56b6c2; --term-cmd: #ffffff;
+  --p-user: #ffffff; --p-ok: #98c379; --p-dir: #56b6c2;
+}
+[data-theme="ubuntu"] {
+  --term-bg: #300a24; --term-chrome: #2c2c2c; --term-border: #4e1f40; --term-dot: #4a4a4a;
+  --term-fg: #ffffff; --term-accent: #729fcf; --term-cmd: #ffffff;
+  --p-user: #8ae234; --p-dir: #729fcf; --p-sym: #ffffff;
+}
+[data-theme="debian"] {
+  --term-bg: #000000; --term-chrome: #1c1c1c; --term-border: #333333; --term-dot: #333333;
+  --term-fg: #d3d7cf; --term-accent: #729fcf; --term-cmd: #d3d7cf;
+  --p-sym: #d3d7cf;
+}
+[data-theme="kali"] {
+  --term-bg: #23252e; --term-chrome: #1b1d24; --term-border: #3a3d4a; --term-dot: #3a3d4a;
+  --term-fg: #ffffff; --term-accent: #5c9dff; --term-cmd: #ffffff;
+  --p-frame: #58d68d; --p-user: #5c9dff; --p-dir: #ffffff;
+}
+[data-theme="macosx"] {
+  --term-bg: #ffffff; --term-chrome: #ececec; --term-border: #c8c8c8; --term-dot: #d6d6d6;
+  --term-fg: #000000; --term-accent: #0040c0; --term-cmd: #000000; --term-muted: #4a4a4a;
+  --p-sym: #000000;
+}
+[data-theme="macosx"] .term-logo path { stroke: #1c3ed3; }
+[data-theme="macosx"] .term-logo circle { fill: #0e1838; }
+[data-theme="cmdline"] {
+  --term-bg: #0c0c0c; --term-chrome: #1f1f1f; --term-border: #3a3a3a; --term-dot: #3a3a3a;
+  --term-fg: #cccccc; --term-accent: #61a0ff; --term-cmd: #cccccc;
+  --p-sym: #cccccc;
+}
+[data-theme="powershell"] {
+  --term-bg: #012456; --term-chrome: #011a3e; --term-border: #1d4a85; --term-dot: #1d4a85;
+  --term-fg: #eeedf0; --term-accent: #f9f1a5; --term-cmd: #f9f1a5;
+  --p-sym: #eeedf0;
+}
+
 /* Classic editor schemes (colour values only). */
 [data-theme="solarized"] {
   --term-bg: #002b36; --term-chrome: #073642; --term-border: #0f4a57;
@@ -164,7 +203,7 @@ a:hover { text-decoration-thickness: 2px; }
   padding: 0.5rem 0.875rem;
   background: var(--term-chrome);
   border-bottom: 1px solid var(--term-border);
-  color: var(--ink-soft);
+  color: var(--term-muted, var(--ink-soft));
   font-size: 0.8125rem;
 }
 .term-logo { flex: none; display: block; }
@@ -175,7 +214,7 @@ a:hover { text-decoration-thickness: 2px; }
   height: 0.625rem;
   border-radius: 50%;
   border: 1px solid var(--term-border);
-  background: #1a2346;
+  background: var(--term-dot, #1a2346);
 }
 
 .term-body {
@@ -199,9 +238,17 @@ a:hover { text-decoration-thickness: 2px; }
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.term-echo { margin-top: 0.25em; }
-.term-echo:first-child { margin-top: 0; }
-.term-prompt { color: var(--term-accent); font-weight: 600; }
+.term-echo,
+.term-pre { margin-top: 0.25em; }
+.term-echo:first-child,
+.term-pre:first-child,
+.term-pre + .term-echo { margin-top: 0; }
+.term-prompt .p-ok { color: var(--p-ok, inherit); }
+.term-prompt .p-user { color: var(--p-user, inherit); }
+.term-prompt .p-dir { color: var(--p-dir, inherit); }
+.term-prompt .p-sym { color: var(--p-sym, inherit); }
+.term-prompt .p-frame { color: var(--p-frame, inherit); }
+.term-prompt { color: var(--term-accent); font-weight: 600; white-space: pre; }
 .term-cmd { color: var(--term-cmd, var(--ink)); }
 .term-link { color: var(--term-accent); }
 

@@ -78,11 +78,13 @@ describe('index.html', () => {
     const out = doc.querySelector('[data-term-output]');
     expect(out).not.toBeNull();
     const t = (out!.textContent ?? '').replace(/\s+/g, ' ');
-    expect(t).toContain('visitor@icns.ca:~$ whoami');
+    expect(t).toContain('visitor@icns.ca ➜ ~ whoami');
+    expect(doc.querySelector('#term-title')?.textContent).toBe('icns consulting | terminal');
     expect(t).toContain('Sr. Security Developer, CISSP | CCSP');
     expect(t).toContain('Independent Consultant @ icns.ca');
-    expect(t).not.toContain('visitor@icns.ca:~$ profiles');
-    expect(t).not.toContain('visitor@icns.ca:~$ status');
+    expect(t).not.toContain('~ profiles');
+    expect(t).not.toContain('~ status');
+    expect(doc.querySelector('[data-terminal]')!.getAttribute('data-theme')).toBe('ghostty');
     expect(out!.getAttribute('aria-live')).toBe('polite');
   });
 

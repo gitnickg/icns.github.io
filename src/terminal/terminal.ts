@@ -1,10 +1,10 @@
-import { run, complete, INTRO, THEMES, type Context, type Line, type Theme } from './commands';
+import { run, complete, INTRO, THEMES, DEFAULT_THEME, type Context, type Line, type Theme } from './commands';
+import { promptFor, envFor, type PromptSeg } from './shells';
 import { startRain } from './rain';
 import { startRestart, startWipe } from './effects';
 import { startRainbow } from './rainbow';
 import { isSafeHref } from '../lib/links';
 
-const PROMPT = 'visitor@icns.ca:~$';
 const STORAGE_KEY = 'icns-terminal-theme';
 
 export type TerminalOptions = { reducedMotion?: boolean; typingDelayMs?: number };
@@ -21,7 +21,7 @@ function readTheme(): Theme {
   } catch {
     /* storage unavailable */
   }
-  return 'blue';
+  return DEFAULT_THEME;
 }
 
 function saveTheme(t: Theme): void {
@@ -53,6 +53,21 @@ function renderLine(line: Line): HTMLElement {
   return div;
 }
 
+/** A `.term-prompt` span holding coloured prompt pieces. */
+export function promptSpan(segs: PromptSeg[], el: HTMLElement = document.createElement('span')): HTMLElement {
+  el.className = 'term-prompt';
+  el.replaceChildren(
+    ...segs.map((s) => {
+      if (!s.cls) return document.createTextNode(s.text);
+      const span = document.createElement('span');
+      span.className = s.cls;
+      span.textContent = s.text;
+      return span;
+    }),
+  );
+  return el;
+}
+
 function longestCommonPrefix(items: string[]): string {
   let p = items[0] ?? '';
   for (const s of items) while (!s.startsWith(p)) p = p.slice(0, -1);
@@ -68,9 +83,19 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
   const reduced = opts.reducedMotion ?? prefersReducedMotion();
   const delay = opts.typingDelayMs ?? 35;
 
+  const formPrompt = form.querySelector<HTMLElement>('.term-prompt');
+  const formPre = root.querySelector<HTMLElement>('[data-term-pre]');
+  let theme: Theme = DEFAULT_THEME;
   let stopRainbow: (() => void) | null = null;
   const applyTheme = (t: Theme) => {
+    theme = t;
     root.dataset.theme = t;
+    const p = promptFor(t);
+    if (formPrompt) promptSpan(p.main, formPrompt);
+    if (formPre) {
+      formPre.hidden = !p.pre;
+      promptSpan(p.pre ?? [], formPre.querySelector<HTMLElement>('.term-prompt') ?? formPre.appendChild(document.createElement('span')));
+    }
     stopRainbow?.();
     stopRainbow = t === 'rainbow' ? startRainbow(output) : null;
   };
@@ -81,11 +106,16 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
   };
 
   const echo = (cmd: string): HTMLElement => {
+    const p = promptFor(theme);
+    if (p.pre) {
+      const pre = document.createElement('div');
+      pre.className = 'term-line term-pre';
+      pre.appendChild(promptSpan(p.pre));
+      output.appendChild(pre);
+    }
     const div = document.createElement('div');
     div.className = 'term-line term-echo';
-    const prompt = document.createElement('span');
-    prompt.className = 'term-prompt';
-    prompt.textContent = PROMPT;
+    const prompt = promptSpan(p.main);
     const text = document.createElement('span');
     text.className = 'term-cmd';
     text.textContent = cmd;
@@ -119,7 +149,7 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
   };
 
   const printResult = (cmd: string) => {
-    const result = run(cmd, ctx);
+    const result = run(cmd, ctx, envFor(theme));
     const eff = result.effect;
     if (eff?.kind === 'clear') {
       output.replaceChildren();
@@ -241,7 +271,7 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
       }
     } else if (e.key === 'Tab') {
       const val = input.value;
-      const matches = complete(val);
+      const matches = complete(val, envFor(theme));
       if (matches.length === 0) return;
       const next = matches.length === 1 ? matches[0] : longestCommonPrefix(matches);
       const changes = matches.length === 1 ? next !== val : next.length > val.length;
