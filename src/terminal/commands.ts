@@ -6,7 +6,7 @@ import { osCommand, osCompletions } from './os';
 export type Segment = { text: string; href?: string };
 export type Line = Segment[];
 /** Terminal look-alikes, each with its own prompt, shell and OS. */
-export const TERMINALS = ['default', 'ubuntu', 'debian', 'fedora', 'arch', 'opensuse', 'kali', 'macosx', 'cmdline', 'powershell'] as const;
+export const TERMINALS = ['default', 'ubuntu', 'debian', 'fedora', 'arch', 'opensuse', 'kali', 'macosx', 'cmd.exe', 'powershell'] as const;
 /** Colour schemes for the default terminal. */
 export const COLORS = [
   'catppuccin-frappe',
