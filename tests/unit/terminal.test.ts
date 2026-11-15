@@ -26,7 +26,8 @@ function build() {
       <div data-term-chips>
         <button type="button" data-cmd="status">status</button>
       </div>
-      <form data-term-form><input data-term-input type="text" /></form>
+      <div data-term-pre hidden><span class="term-prompt"></span></div>
+      <form data-term-form><span class="term-prompt"></span><input data-term-input type="text" /></form>
     </div>`;
   root = document.getElementById('root')!;
   output = root.querySelector('[data-term-output]')!;
@@ -60,10 +61,10 @@ describe('mountTerminal', () => {
     mount();
     const t = output.textContent!;
     expect(t).not.toContain('static intro');
-    expect(t).toContain('visitor@icns.ca:~$ whoami');
+    expect(t).toContain('➜  ~ whoami');
     expect(t).toContain('Independent Consultant @ icns.ca');
-    expect(t).not.toContain('visitor@icns.ca:~$ profiles');
-    expect(t).not.toContain('visitor@icns.ca:~$ status');
+    expect(t).not.toContain('~ profiles');
+    expect(t).not.toContain('~ status');
   });
 
   it('renders hostile input as literal text', () => {
@@ -82,7 +83,7 @@ describe('mountTerminal', () => {
     const before = output.children.length;
     submit('   ');
     expect(output.children.length).toBe(before + 1);
-    expect(output.lastElementChild!.textContent!.trim()).toBe('visitor@icns.ca:~$');
+    expect(output.lastElementChild!.textContent!.trim()).toBe('visitor@icns.ca ➜  ~');
   });
 
   it('history: ArrowUp/ArrowDown, skipping empty entries', () => {
@@ -137,7 +138,7 @@ describe('mountTerminal', () => {
   it('defaults to blue and ignores invalid stored theme', () => {
     localStorage.setItem('icns-terminal-theme', 'plaid');
     mount();
-    expect(root.dataset.theme).toBe('blue');
+    expect(root.dataset.theme).toBe('ghostty');
   });
 
   it('survives localStorage throwing', () => {
@@ -148,7 +149,7 @@ describe('mountTerminal', () => {
       throw new Error('denied');
     });
     mount();
-    expect(root.dataset.theme).toBe('blue');
+    expect(root.dataset.theme).toBe('ghostty');
     submit('theme green');
     expect(root.dataset.theme).toBe('green');
   });
@@ -176,6 +177,44 @@ describe('mountTerminal', () => {
     await Promise.resolve();
     expect(output.lastElementChild!.querySelector('.rb')).toBeNull();
     expect(output.lastElementChild!.textContent).toBe('/home/visitor');
+  });
+
+  it('each terminal theme has its own prompt and errors', () => {
+    mount();
+    const formPrompt = () => form.querySelector('.term-prompt')!.textContent;
+    const pre = root.querySelector<HTMLElement>('[data-term-pre]')!;
+    expect(formPrompt()).toBe('visitor@icns.ca ➜  ~');
+    expect(pre.hidden).toBe(true);
+    submit('nope');
+    expect(output.lastElementChild!.textContent).toBe('zsh: command not found: nope');
+
+    const cases: Array<[string, string, string]> = [
+      ['ubuntu', 'visitor@icns:~$', 'bash: nope: command not found'],
+      ['debian', 'visitor@icns:~$', 'bash: nope: command not found'],
+      ['macosx', 'visitor@icns ~ %', 'zsh: command not found: nope'],
+      ['cmdline', 'C:\\Users\\visitor>', 'operable program or batch file.'],
+      ['powershell', 'PS C:\\Users\\visitor>', 'verify that the path is correct and try again.'],
+      ['blue', 'visitor@icns.ca ➜  ~', 'zsh: command not found: nope'],
+      ['rainbow', 'visitor@icns.ca ➜  ~', 'zsh: command not found: nope'],
+    ];
+    for (const [t, prompt, err] of cases) {
+      submit(`theme ${t}`);
+      expect(formPrompt()).toBe(prompt);
+      expect(pre.hidden).toBe(true);
+      submit('nope');
+      expect(output.lastElementChild!.textContent!.endsWith(err)).toBe(true);
+      const echoes = output.querySelectorAll('.term-echo');
+      expect(echoes[echoes.length - 1].textContent).toBe(`${prompt} nope`);
+    }
+
+    submit('theme kali');
+    expect(pre.hidden).toBe(false);
+    expect(pre.textContent).toBe('┌──(visitor㉿icns)-[~]');
+    expect(formPrompt()).toBe('└─$');
+    submit('pwd');
+    const [preLine, echoLine] = [...output.children].slice(-3);
+    expect(preLine.textContent).toBe('┌──(visitor㉿icns)-[~]');
+    expect(echoLine.textContent).toBe('└─$ pwd');
   });
 
   it('clear empties the output', () => {
@@ -224,7 +263,7 @@ describe('mountTerminal', () => {
     mount({ typingDelayMs: 10, reducedMotion: false });
     expect(output.textContent).not.toContain('Independent Consultant');
     vi.advanceTimersByTime(30);
-    expect(output.textContent).toContain('visitor@icns.ca:~$ ');
+    expect(output.textContent).toContain('➜  ~ ');
     submit('contact');
     const t = output.textContent!;
     expect(t).toContain('Independent Consultant @ icns.ca');

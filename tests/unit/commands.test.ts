@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { run, complete, PUBLIC_COMMANDS, COMPLETIONS, THEMES, INTRO, type Context } from '../../src/terminal/commands';
+import { envFor } from '../../src/terminal/shells';
+import { run, complete, completions, PUBLIC_COMMANDS, THEMES, TERMINALS, COLORS, INTRO, type Context } from '../../src/terminal/commands';
 
 const ctx: Context = {
   profiles: [
@@ -37,31 +38,95 @@ describe('run', () => {
       { text: 'github.com/gitnickg', href: 'https://github.com/gitnickg' },
     ]);
   });
+  it('errors follow the theme\'s shell', () => {
+    expect(text(run('nope', ctx))).toEqual(['zsh: command not found: nope']);
+    expect(text(run('nope', ctx, envFor('ubuntu')))).toEqual(['bash: nope: command not found']);
+    expect(text(run('nope', ctx, envFor('cmdline')))).toEqual(["'nope' is not recognized as an internal or external command,", 'operable program or batch file.']);
+    expect(text(run('nope', ctx, envFor('powershell')))[0]).toBe("nope: The term 'nope' is not recognized as a name of a cmdlet, function, script file, or executable program.");
+    expect(text(run('cd /tmp', ctx))).toEqual(['cd: no such file or directory: /tmp']);
+    expect(text(run('cd /tmp', ctx, envFor('debian')))).toEqual(['bash: cd: /tmp: No such file or directory']);
+    expect(text(run('cd /tmp', ctx, envFor('cmdline')))).toEqual(['The system cannot find the path specified.']);
+    expect(text(run('cd /tmp', ctx, envFor('powershell')))).toEqual(["Set-Location: Cannot find path '/tmp' because it does not exist."]);
+  });
   it('resume links to LinkedIn', () => {
     const r = run('resume', ctx);
     expect(r.lines).toEqual([[{ text: 'linkedin.com/in/gitnickg', href: 'https://www.linkedin.com/in/gitnickg/' }]]);
     expect(text(run('help', ctx)).some((l) => l.startsWith('resume'))).toBe(true);
     expect(text(run('help', ctx)).some((l) => l.startsWith('status'))).toBe(true);
   });
-  it('shell basics', () => {
+  it('linux shell basics (default ghostty: zsh on Debian)', () => {
     expect(text(run('pwd', ctx))).toEqual(['/home/visitor']);
     expect(text(run('hostname', ctx))).toEqual(['icns.ca']);
     expect(text(run('id', ctx))).toEqual(['uid=1000(visitor) gid=1000(visitor) groups=1000(visitor)']);
     expect(text(run('ls', ctx))).toEqual(['security.txt']);
-    expect(text(run('ls -a', ctx))).toEqual(['.  ..  .bash_history  .profile  security.txt']);
+    expect(text(run('ls -a', ctx))).toEqual(['.  ..  .zsh_history  .zshrc  security.txt']);
+    expect(text(run('ls -a', ctx, envFor('ubuntu')))).toEqual(['.  ..  .bash_history  .profile  security.txt']);
     expect(text(run('ls -la', ctx))[1]).toMatch(/^-rw-r--r-- 1 visitor visitor \d+ .* security\.txt$/);
     expect(text(run('ls /etc', ctx))).toEqual(["ls: cannot access '/etc': No such file or directory"]);
     expect(text(run('cat ~/security.txt', ctx))).toEqual(text(run('cat security.txt', ctx)));
     expect(text(run('cat notes.txt', ctx))).toEqual(['cat: notes.txt: No such file or directory']);
     expect(text(run('cd', ctx))).toEqual([]);
-    expect(text(run('cd /tmp', ctx))).toEqual(['bash: cd: /tmp: No such file or directory']);
     expect(text(run('echo Hello  World', ctx))).toEqual(['Hello  World']);
     expect(text(run('uname', ctx))).toEqual(['Linux']);
-    expect(text(run('uname -a', ctx))[0]).toMatch(/^Linux icns\.ca .* GNU\/Linux$/);
     expect(text(run('date', ctx))[0]).toMatch(/^\w{3} \w{3} [ \d]\d \d\d:\d\d:\d\d \S+ \d{4}$/);
     expect(text(run('uptime', ctx))[0]).toMatch(/^ \d\d:\d\d:\d\d up \d+ min,  1 user,  load average: /);
     expect(text(run('sudo ls', ctx))).toEqual(['[sudo] password for visitor: ', 'visitor is not in the sudoers file.']);
+    expect(text(run('dir', ctx))).toEqual(['zsh: command not found: dir']);
     expect(complete('up')).toEqual(['uptime']);
+  });
+  it('each OS reports itself', () => {
+    expect(text(run('uname -a', ctx))[0]).toMatch(/^Linux icns\.ca .*Debian.* GNU\/Linux$/);
+    expect(text(run('uname -a', ctx, envFor('ubuntu')))[0]).toMatch(/-Ubuntu SMP/);
+    expect(text(run('uname -a', ctx, envFor('kali')))[0]).toMatch(/kali1/);
+    expect(text(run('cat /etc/os-release', ctx, envFor('kali')))[0]).toBe('PRETTY_NAME="Kali GNU/Linux Rolling"');
+    expect(text(run('cat /etc/os-release', ctx, envFor('ubuntu')))[0]).toBe('PRETTY_NAME="Ubuntu 24.04.1 LTS"');
+    expect(text(run('cat /etc/os-release', ctx, envFor('debian')))[0]).toBe('PRETTY_NAME="Debian GNU/Linux 13 (trixie)"');
+    expect(text(run('sw_vers', ctx))).toEqual(['zsh: command not found: sw_vers']);
+  });
+  it('macOS', () => {
+    const mac = envFor('macosx');
+    expect(text(run('uname', ctx, mac))).toEqual(['Darwin']);
+    expect(text(run('uname -a', ctx, mac))[0]).toMatch(/^Darwin icns\.ca .* arm64$/);
+    expect(text(run('pwd', ctx, mac))).toEqual(['/Users/visitor']);
+    expect(text(run('sw_vers', ctx, mac))[0]).toBe('ProductName:\t\tmacOS');
+    expect(text(run('ls -la', ctx, mac))[1]).toMatch(/^-rw-r--r--  1 visitor  staff  \d+ /);
+    expect(text(run('id', ctx, mac))[0]).toMatch(/^uid=501\(visitor\) gid=20\(staff\)/);
+    expect(text(run('cat /etc/os-release', ctx, mac))).toEqual(['cat: /etc/os-release: No such file or directory']);
+    expect(text(run('uptime', ctx, mac))[0]).toMatch(/^\d\d:\d\d  up \d+ mins?, 1 user, load averages: /);
+  });
+  it('cmd.exe', () => {
+    const cmd = envFor('cmdline');
+    const dir = text(run('dir', ctx, cmd));
+    expect(dir[3]).toBe(' Directory of C:\\Users\\visitor');
+    expect(dir.some((l) => l.endsWith(' security.txt'))).toBe(true);
+    expect(text(run('cd', ctx, cmd))).toEqual(['C:\\Users\\visitor']);
+    expect(text(run('type security.txt', ctx, cmd))).toEqual(text(run('cat security.txt', ctx)));
+    expect(text(run('type notes.txt', ctx, cmd))).toEqual(['The system cannot find the file specified.']);
+    expect(run('cls', ctx, cmd).effect).toEqual({ kind: 'clear' });
+    expect(text(run('ver', ctx, cmd))).toEqual(['', 'Microsoft Windows [Version 10.0.26100.2314]']);
+    expect(text(run('hostname', ctx, cmd))).toEqual(['ICNS']);
+    expect(text(run('echo', ctx, cmd))).toEqual(['ECHO is on.']);
+    expect(text(run('ECHO Hi There', ctx, cmd))).toEqual(['Hi There']);
+    expect(text(run('date /t', ctx, cmd))[0]).toMatch(/^\w{3} \d\d\/\d\d\/\d{4}$/);
+    for (const unix of ['ls', 'pwd', 'uname -a']) expect(text(run(unix, ctx, cmd))[1]).toBe('operable program or batch file.');
+    expect(complete('ve', cmd)).toEqual(['ver']);
+    expect(complete('ve')).toEqual([]);
+  });
+  it('PowerShell', () => {
+    const ps = envFor('powershell');
+    for (const c of ['ls', 'dir', 'gci', 'Get-ChildItem']) {
+      const l = text(run(c, ctx, ps));
+      expect(l[1]).toBe('    Directory: C:\\Users\\visitor');
+      expect(l[5]).toMatch(/^-a--- .* security\.txt$/);
+    }
+    expect(text(run('pwd', ctx, ps))).toEqual(['', 'Path', '----', 'C:\\Users\\visitor', '']);
+    expect(text(run('Get-Content security.txt', ctx, ps))).toEqual(text(run('cat security.txt', ctx)));
+    expect(text(run('gc notes.txt', ctx, ps))[0]).toMatch(/^Get-Content: Cannot find path 'C:\\Users\\visitor\\notes\.txt'/);
+    expect(run('Clear-Host', ctx, ps).effect).toEqual({ kind: 'clear' });
+    expect(text(run('Write-Output Hello', ctx, ps))).toEqual(['Hello']);
+    expect(text(run('$PSVersionTable', ctx, ps))[3]).toMatch(/^PSVersion\s+7\./);
+    expect(text(run('uname', ctx, ps))[0]).toMatch(/^uname: The term 'uname' is not recognized/);
+    expect(complete('get-c', ps)).toEqual(['get-childitem', 'get-content']);
   });
   it('status', () => {
     expect(text(run('status', ctx))).toEqual(['● bug bounties: active', '● consulting: open, part-time, remote']);
@@ -73,7 +138,8 @@ describe('run', () => {
     expect(text(run('cat security.txt', ctx))).toEqual(['Contact: mailto:hello@icns.ca', 'Expires: 2030-01-01']);
   });
   it('theme', () => {
-    const usage = ['usage: theme <name>', `themes: ${THEMES.join(' ')}`];
+    const usage = ['usage: theme <name>', `terminals: ${TERMINALS.join(' ')}`, `colors (ghostty): ${COLORS.join(' ')}`];
+    expect(THEMES).toEqual([...TERMINALS, ...COLORS]);
     expect(text(run('theme', ctx))).toEqual(usage);
     for (const t of ['solarized', 'dracula', 'nord', 'gruvbox', 'monokai', 'rainbow', 'pink'])
       expect(run(`theme ${t}`, ctx).effect).toEqual({ kind: 'theme', theme: t });
@@ -110,14 +176,14 @@ describe('run', () => {
     expect(run('   ', ctx)).toEqual({ lines: [] });
   });
   it('unknown', () => {
-    expect(text(run('Foo bar', ctx))).toEqual(['bash: foo: command not found']);
+    expect(text(run('Foo bar', ctx))).toEqual(['zsh: command not found: foo']);
   });
 });
 
 describe('complete', () => {
   it('works', () => {
-    expect(complete('')).toEqual([...COMPLETIONS]);
-    for (const c of PUBLIC_COMMANDS) expect(COMPLETIONS).toContain(c);
+    expect(complete('')).toEqual(completions());
+    for (const c of PUBLIC_COMMANDS) expect(completions()).toContain(c);
     expect(complete('p')).toEqual(['profiles', 'pwd']);
     expect(complete('pa')).toEqual([]);
     expect(complete('cat')).toEqual(['cat security.txt', 'cat']);
