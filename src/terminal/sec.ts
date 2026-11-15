@@ -1,0 +1,102 @@
+/**
+ * Unlisted security-tool commands. They take arguments, so they are keyed by the MD5 of the
+ * first word only. Banners only: nothing here touches the network.
+ */
+import type { Line, Result } from './commands';
+
+const plain = (s: string): Line => [{ text: s }];
+const out = (...lines: string[]): Result => ({ lines: lines.map(plain) });
+
+const PORTS: [number, string][] = [
+  [42, 'life'],
+  [67, 'yo'],
+  [69, 'nice'],
+  [420, 'swed'],
+  [666, 'mafia'],
+  [1337, 'pwnd'],
+];
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+const stamp = (d: Date) => {
+  const zone = d.toLocaleString('en-US', { timeZoneName: 'short' }).split(' ').pop() ?? 'UTC';
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())} ${zone}`;
+};
+
+function nmap(args: string[]): Result {
+  const target = args.filter((a) => !a.startsWith('-')).at(-1);
+  if (!target) {
+    return out('Nmap 7.95 ( https://nmap.org )', 'Usage: nmap [Scan Type(s)] [Options] {target specification}');
+  }
+  return out(
+    `Starting Nmap 7.95 ( https://nmap.org ) at ${stamp(new Date())}`,
+    `Nmap scan report for ${target}`,
+    'Host is up (0.0013s latency).',
+    `Not shown: ${1000 - PORTS.length} closed tcp ports (reset)`,
+    'PORT     STATE SERVICE',
+    ...PORTS.map(([p, s]) => `${`${p}/tcp`.padEnd(9)}open  ${s}`),
+    '',
+    'Nmap done: 1 IP address (1 host up) scanned in 0.42 seconds',
+  );
+}
+
+const msfconsole = (): Result =>
+  out(
+    '',
+    '       =[ metasploit v6.4.38-dev                          ]',
+    '+ -- --=[ 2467 exploits - 1273 auxiliary - 431 post       ]',
+    '+ -- --=[ 1478 payloads - 49 encoders - 13 nops           ]',
+    '+ -- --=[ 9 evasion                                       ]',
+    '',
+    'Metasploit Documentation: https://docs.metasploit.com/',
+    '',
+    'msf6 > exit',
+  );
+
+const sqlmap = (): Result =>
+  out(
+    '        ___',
+    '       __H__',
+    ' ___ ___[\']_____ ___ ___  {1.8.11#stable}',
+    '|_ -| . ["]     | .\'| . |',
+    '|___|_  [)]_|_|_|__,|  _|',
+    '      |_|V...       |_|   https://sqlmap.org',
+    '',
+    '[!] legal disclaimer: usage of sqlmap for attacking targets without prior mutual consent is illegal.',
+  );
+
+const hydra = (): Result =>
+  out(
+    'Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.',
+    '',
+    'Syntax: hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-t TASKS] server service',
+  );
+
+const nikto = (): Result =>
+  out('- Nikto v2.5.0', '---------------------------------------------------------------------------', '+ ERROR: No host (-host) specified');
+
+const john = (): Result =>
+  out(
+    'John the Ripper 1.9.0-jumbo-1+bleeding [linux-gnu 64-bit x86_64 AVX2 AC]',
+    'Copyright (c) 1996-2024 by Solar Designer and others',
+    'Homepage: https://www.openwall.com/john/',
+    '',
+    'Usage: john [OPTIONS] [PASSWORD-FILES]',
+  );
+
+const hashcat = (): Result =>
+  out('hashcat (v6.2.6) starting...', '', 'Usage: hashcat [options]... hash|hashfile|hccapxfile [dictionary|mask|directory]...');
+
+const tools: Record<string, (args: string[]) => Result> = {
+  '7c0132070a0ef71d542663e9dc1f5dee': nmap,
+  '3a1a8688af4e7a3b333ebf1ca027af3d': msfconsole,
+  da3bcb630536a3d32bc8db4adb4de1a0: sqlmap,
+  '84366803777e6ba127f4668d0a6fcb96': hydra,
+  '9093c0dea19adf938dd4b09f290f0811': nikto,
+  '527bd5b5d689e2c32ae974c6229ff785': john,
+  '8743b52063cd84097a65d1633f5c74f5': hashcat,
+};
+
+/** Runs a security tool by the MD5 of its name. Null when there is no such tool. */
+export function secTool(nameHash: string, args: string[]): Result | null {
+  return Object.hasOwn(tools, nameHash) ? tools[nameHash](args) : null;
+}

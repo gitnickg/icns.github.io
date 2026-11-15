@@ -2,6 +2,7 @@ import type { Profile } from '../lib/profiles';
 import { md5 } from './md5';
 import { DEFAULT_ENV, notFound, type Env } from './shells';
 import { osCommand, osCompletions } from './os';
+import { secTool } from './sec';
 
 export type Segment = { text: string; href?: string };
 export type Line = Segment[];
@@ -134,6 +135,9 @@ export function run(input: string, ctx: Context, env: Env = DEFAULT_ENV): Result
   if (Object.hasOwn(table, norm)) return table[norm](ctx);
   const h = md5(norm);
   if (Object.hasOwn(hidden, h)) return hidden[h]();
+  const [name, ...args] = norm.split(' ');
+  const tool = secTool(md5(name), args);
+  if (tool) return tool;
   const sh = osCommand(norm, input, ctx, env);
   if (sh) return sh;
   return { lines: notFound(norm.split(' ')[0], env.shell).map(plain) };

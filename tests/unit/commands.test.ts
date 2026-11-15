@@ -197,3 +197,38 @@ describe('complete', () => {
 });
 
 it('INTRO', () => expect([...INTRO]).toEqual(['whoami']));
+
+describe('security tools', () => {
+  it('scans any target and lists the joke ports in order', () => {
+    for (const target of ['example.com', '10.0.0.1']) {
+      for (const theme of ['default', 'kali', 'cmd.exe'] as const) {
+        const t = text(run(`${egg('bm1hcA==')} -sV ${target}`, ctx, envFor(theme)));
+        expect(t[1]).toBe(`Nmap scan report for ${target}`);
+        const ports = t.filter((l) => /^\d+\/tcp/.test(l)).map((l) => l.split(/\s+/));
+        expect(ports.map(([p, , s]) => [parseInt(p, 10), s])).toEqual([
+          [42, 'life'],
+          [67, 'yo'],
+          [69, 'nice'],
+          [420, 'swed'],
+          [666, 'mafia'],
+          [1337, 'pwnd'],
+        ]);
+        expect(ports.every(([, st]) => st === 'open')).toBe(true);
+      }
+    }
+  });
+  it('without a target prints usage', () => {
+    expect(text(run(egg('bm1hcA=='), ctx)).at(-1)).toMatch(/^Usage: nmap/);
+  });
+  it('other tools print a banner', () => {
+    for (const b of ['bXNmY29uc29sZQ==', 'c3FsbWFw', 'aHlkcmE=', 'bmlrdG8=', 'am9obg==', 'aGFzaGNhdA==']) {
+      const t = text(run(egg(b), ctx));
+      expect(t.length).toBeGreaterThan(1);
+      expect(t.join('\n')).not.toMatch(/command not found/);
+    }
+  });
+  it('are not listed or completed', () => {
+    expect(text(run('help', ctx)).join('\n')).not.toMatch(new RegExp(egg('bm1hcA==')));
+    expect(complete(egg('bm1hcA=='))).toEqual([]);
+  });
+});
