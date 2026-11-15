@@ -27,6 +27,9 @@ const securityLines = (ctx: Context) => ctx.securityTxt.replace(/\s+$/, '').spli
 const UNAME_A: Record<string, string> = {
   debian: 'Linux icns.ca 6.12.48-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.48-1 x86_64 GNU/Linux',
   ubuntu: 'Linux icns.ca 6.8.0-49-generic #49-Ubuntu SMP PREEMPT_DYNAMIC Mon Nov  4 02:06:24 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux',
+  fedora: 'Linux icns.ca 6.17.7-300.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Nov  2 15:30:09 UTC 2025 x86_64 GNU/Linux',
+  arch: 'Linux icns.ca 6.17.7-arch1-1 #1 SMP PREEMPT_DYNAMIC Sun, 02 Nov 2025 17:27:22 +0000 x86_64 GNU/Linux',
+  opensuse: 'Linux icns.ca 6.17.7-1-default #1 SMP PREEMPT_DYNAMIC Mon Nov  3 08:32:55 UTC 2025 (b9a5b8e) x86_64 x86_64 x86_64 GNU/Linux',
   kali: 'Linux icns.ca 6.11.2-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.11.2-1kali1 (2024-10-15) x86_64 GNU/Linux',
   macos:
     'Darwin icns.ca 24.6.0 Darwin Kernel Version 24.6.0: Mon Jul 14 11:28:17 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T6000 arm64',
@@ -35,6 +38,9 @@ const UNAME_A: Record<string, string> = {
 const OS_RELEASE: Record<string, string[]> = {
   debian: ['PRETTY_NAME="Debian GNU/Linux 13 (trixie)"', 'NAME="Debian GNU/Linux"', 'VERSION_ID="13"', 'VERSION="13 (trixie)"', 'ID=debian'],
   ubuntu: ['PRETTY_NAME="Ubuntu 24.04.1 LTS"', 'NAME="Ubuntu"', 'VERSION_ID="24.04"', 'VERSION="24.04.1 LTS (Noble Numbat)"', 'ID=ubuntu', 'ID_LIKE=debian'],
+  fedora: ['NAME="Fedora Linux"', 'VERSION="43 (Workstation Edition)"', 'ID=fedora', 'VERSION_ID=43', 'PRETTY_NAME="Fedora Linux 43 (Workstation Edition)"'],
+  arch: ['NAME="Arch Linux"', 'PRETTY_NAME="Arch Linux"', 'ID=arch', 'BUILD_ID=rolling'],
+  opensuse: ['NAME="openSUSE Tumbleweed"', 'ID="opensuse-tumbleweed"', 'ID_LIKE="opensuse suse"', 'VERSION_ID="20251110"', 'PRETTY_NAME="openSUSE Tumbleweed"'],
   kali: ['PRETTY_NAME="Kali GNU/Linux Rolling"', 'NAME="Kali GNU/Linux"', 'VERSION_ID="2025.3"', 'VERSION="2025.3"', 'ID=kali', 'ID_LIKE=debian'],
 };
 

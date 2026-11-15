@@ -93,6 +93,21 @@
   --term-fg: #d3d7cf; --term-accent: #729fcf; --term-cmd: #d3d7cf;
   --p-sym: #d3d7cf;
 }
+[data-theme="fedora"] {
+  --term-bg: #1e1e1e; --term-chrome: #2a2a2a; --term-border: #3d3d3d; --term-dot: #3d3d3d;
+  --term-fg: #ffffff; --term-accent: #51a2da; --term-cmd: #ffffff;
+  --p-sym: #ffffff;
+}
+[data-theme="arch"] {
+  --term-bg: #000000; --term-chrome: #16191c; --term-border: #2b3036; --term-dot: #2b3036;
+  --term-fg: #d0d0d0; --term-accent: #1793d1; --term-cmd: #d0d0d0;
+  --p-sym: #d0d0d0;
+}
+[data-theme="opensuse"] {
+  --term-bg: #232627; --term-chrome: #2a2e32; --term-border: #3b4045; --term-dot: #3b4045;
+  --term-fg: #fcfcfc; --term-accent: #73ba25; --term-cmd: #fcfcfc;
+  --p-sym: #fcfcfc;
+}
 [data-theme="kali"] {
   --term-bg: #23252e; --term-chrome: #1b1d24; --term-border: #3a3d4a; --term-dot: #3a3d4a;
   --term-fg: #ffffff; --term-accent: #5c9dff; --term-cmd: #ffffff;

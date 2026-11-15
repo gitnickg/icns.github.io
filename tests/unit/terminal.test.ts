@@ -197,6 +197,9 @@ describe('mountTerminal', () => {
     const cases: Array<[string, string, string]> = [
       ['ubuntu', 'visitor@icns.ca:~$', 'bash: nope: command not found'],
       ['debian', 'visitor@icns.ca:~$', 'bash: nope: command not found'],
+      ['fedora', '[visitor@icns.ca ~]$', 'bash: nope: command not found'],
+      ['arch', '[visitor@icns.ca ~]$', 'bash: nope: command not found'],
+      ['opensuse', 'visitor@icns.ca:~>', 'bash: nope: command not found'],
       ['macosx', 'visitor@icns.ca ~ %', 'zsh: command not found: nope'],
       ['cmdline', 'C:\\Users\\visitor>', 'operable program or batch file.'],
       ['powershell', 'PS C:\\Users\\visitor>', 'verify that the path is correct and try again.'],

@@ -82,6 +82,12 @@ describe('run', () => {
     expect(text(run('cat /etc/os-release', ctx, envFor('ubuntu')))[0]).toBe('PRETTY_NAME="Ubuntu 24.04.1 LTS"');
     expect(text(run('cat /etc/os-release', ctx, envFor('debian')))[0]).toBe('PRETTY_NAME="Debian GNU/Linux 13 (trixie)"');
     expect(text(run('sw_vers', ctx))).toEqual(['zsh: command not found: sw_vers']);
+    expect(text(run('uname -a', ctx, envFor('fedora')))[0]).toMatch(/\.fc43\.x86_64 /);
+    expect(text(run('uname -a', ctx, envFor('arch')))[0]).toMatch(/-arch1-1 /);
+    expect(text(run('uname -a', ctx, envFor('opensuse')))[0]).toMatch(/-default /);
+    expect(text(run('cat /etc/os-release', ctx, envFor('fedora')))).toContain('PRETTY_NAME="Fedora Linux 43 (Workstation Edition)"');
+    expect(text(run('cat /etc/os-release', ctx, envFor('arch')))).toContain('PRETTY_NAME="Arch Linux"');
+    expect(text(run('cat /etc/os-release', ctx, envFor('opensuse')))).toContain('PRETTY_NAME="openSUSE Tumbleweed"');
   });
   it('macOS', () => {
     const mac = envFor('macosx');

@@ -8,7 +8,7 @@ import type { Theme } from './commands';
 export type PromptSeg = { text: string; cls?: string };
 export type Prompt = { pre?: PromptSeg[]; main: PromptSeg[] };
 export type Flavor = 'bash' | 'zsh' | 'cmd' | 'ps';
-export type Os = 'debian' | 'ubuntu' | 'kali' | 'macos' | 'windows';
+export type Os = 'debian' | 'ubuntu' | 'fedora' | 'arch' | 'opensuse' | 'kali' | 'macos' | 'windows';
 export type Env = { shell: Flavor; os: Os };
 
 // Each prompt is that terminal's out-of-the-box default, with user `visitor` and host `icns.ca`.
@@ -38,6 +38,11 @@ const PROMPTS: Partial<Record<Theme, Prompt>> = {
   },
   // Debian's ~/.bashrc leaves colour off.
   debian: { main: [{ text: 'visitor@icns.ca:~$', cls: 'p-sym' }] },
+  // Fedora and Arch ship bash's classic [\u@\h \W]\$ with no colour.
+  fedora: { main: [{ text: '[visitor@icns.ca ~]$', cls: 'p-sym' }] },
+  arch: { main: [{ text: '[visitor@icns.ca ~]$', cls: 'p-sym' }] },
+  // openSUSE: \u@\h:\w>
+  opensuse: { main: [{ text: 'visitor@icns.ca:~>', cls: 'p-sym' }] },
   // Kali's zsh prompt: green frame, bold blue user㉿host, bold path, bold blue $.
   kali: {
     pre: [
@@ -60,6 +65,9 @@ export const DEFAULT_ENV: Env = { shell: 'zsh', os: 'debian' };
 const ENVS: Partial<Record<Theme, Env>> = {
   ubuntu: { shell: 'bash', os: 'ubuntu' },
   debian: { shell: 'bash', os: 'debian' },
+  fedora: { shell: 'bash', os: 'fedora' },
+  arch: { shell: 'bash', os: 'arch' },
+  opensuse: { shell: 'bash', os: 'opensuse' },
   kali: { shell: 'zsh', os: 'kali' },
   macosx: { shell: 'zsh', os: 'macos' },
   cmdline: { shell: 'cmd', os: 'windows' },
