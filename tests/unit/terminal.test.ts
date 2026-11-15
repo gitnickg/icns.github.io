@@ -195,9 +195,9 @@ describe('mountTerminal', () => {
     expect(output.lastElementChild!.textContent).toBe('zsh: command not found: nope');
 
     const cases: Array<[string, string, string]> = [
-      ['ubuntu', 'visitor@icns:~$', 'bash: nope: command not found'],
-      ['debian', 'visitor@icns:~$', 'bash: nope: command not found'],
-      ['macosx', 'visitor@icns ~ %', 'zsh: command not found: nope'],
+      ['ubuntu', 'visitor@icns.ca:~$', 'bash: nope: command not found'],
+      ['debian', 'visitor@icns.ca:~$', 'bash: nope: command not found'],
+      ['macosx', 'visitor@icns.ca ~ %', 'zsh: command not found: nope'],
       ['cmdline', 'C:\\Users\\visitor>', 'operable program or batch file.'],
       ['powershell', 'PS C:\\Users\\visitor>', 'verify that the path is correct and try again.'],
       ['blue', 'visitor@icns.ca ➜  ~', 'zsh: command not found: nope'],
@@ -213,13 +213,26 @@ describe('mountTerminal', () => {
       expect(echoes[echoes.length - 1].textContent).toBe(`${prompt} nope`);
     }
 
+    const bold = (t: string) => {
+      submit(`theme ${t}`);
+      return [...form.querySelectorAll('.term-prompt .p-b')].map((e) => e.textContent);
+    };
+    expect(bold('default')).toEqual(['➜']);
+    expect(bold('ubuntu')).toEqual(['visitor@icns.ca', '~']);
+    expect(bold('debian')).toEqual([]);
+    expect(bold('macosx')).toEqual([]);
+    expect(bold('cmdline')).toEqual([]);
+    expect(bold('powershell')).toEqual([]);
+
     submit('theme kali');
     expect(pre.hidden).toBe(false);
-    expect(pre.textContent).toBe('┌──(visitor㉿icns)-[~]');
+    expect([...pre.querySelectorAll('.p-b')].map((e) => e.textContent)).toEqual(['visitor㉿icns.ca', '~']);
+    expect(bold('kali')).toEqual(['$']);
+    expect(pre.textContent).toBe('┌──(visitor㉿icns.ca)-[~]');
     expect(formPrompt()).toBe('└─$');
     submit('pwd');
     const [preLine, echoLine] = [...output.children].slice(-3);
-    expect(preLine.textContent).toBe('┌──(visitor㉿icns)-[~]');
+    expect(preLine.textContent).toBe('┌──(visitor㉿icns.ca)-[~]');
     expect(echoLine.textContent).toBe('└─$ pwd');
   });
 
