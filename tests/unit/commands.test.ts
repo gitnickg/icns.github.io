@@ -140,8 +140,21 @@ describe('run', () => {
   it('contact', () => {
     expect(run('contact', ctx).lines).toEqual([[{ text: 'hello@icns.ca', href: 'mailto:hello@icns.ca' }]]);
   });
-  it('cat security.txt', () => {
-    expect(text(run('cat security.txt', ctx))).toEqual(['Contact: mailto:hello@icns.ca', 'Expires: 2030-01-01']);
+  it('security.txt prints the file in every theme', () => {
+    for (const t of TERMINALS)
+      expect(text(run('security.txt', ctx, envFor(t)))).toEqual(['Contact: mailto:hello@icns.ca', 'Expires: 2030-01-01']);
+  });
+  it('each OS shows the file with its own command', () => {
+    const file = text(run('security.txt', ctx));
+    expect(text(run('cat security.txt', ctx, envFor('ubuntu')))).toEqual(file);
+    expect(text(run('cat security.txt', ctx, envFor('macosx')))).toEqual(file);
+    expect(text(run('type security.txt', ctx, envFor('cmd.exe')))).toEqual(file);
+    expect(text(run('Get-Content security.txt', ctx, envFor('powershell')))).toEqual(file);
+    expect(text(run('cat security.txt', ctx, envFor('cmd.exe')))[0]).toMatch(/is not recognized/);
+    expect(text(run('type security.txt', ctx))).toEqual(['zsh: command not found: type']);
+  });
+  it('bitcoin links to the whitepaper', () => {
+    expect(run('bitcoin', ctx).lines).toEqual([[{ text: 'icns.ca/bitcoin.pdf', href: '/bitcoin.pdf' }]]);
   });
   it('theme', () => {
     const usage = ['usage: theme <name>', `terminals: ${TERMINALS.join(' ')}`, `colors (default): ${COLORS.join(' ')}`];
@@ -189,10 +202,12 @@ describe('run', () => {
 describe('complete', () => {
   it('works', () => {
     expect(complete('')).toEqual(completions());
-    for (const c of PUBLIC_COMMANDS) expect(completions()).toContain(c);
+    for (const c of PUBLIC_COMMANDS.filter((c) => c !== 'security.txt')) expect(completions()).toContain(c);
+    expect(completions()).not.toContain('security.txt');
     expect(complete('p')).toEqual(['profiles', 'pwd']);
     expect(complete('pa')).toEqual([]);
-    expect(complete('cat')).toEqual(['cat security.txt', 'cat']);
+    expect(complete('cat')).toEqual(['cat']);
+    expect(complete('sec')).toEqual([]);
   });
 });
 

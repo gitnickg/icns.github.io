@@ -41,7 +41,8 @@ export const PUBLIC_COMMANDS: readonly string[] = [
   'status',
   'resume',
   'contact',
-  'cat security.txt',
+  'security.txt',
+  'bitcoin',
   'theme',
   'clear',
 ];
@@ -62,7 +63,8 @@ const DESCRIPTIONS: Record<string, string> = {
   status: 'current availability',
   resume: 'work history',
   contact: 'get in touch',
-  'cat security.txt': 'report a vuln',
+  'security.txt': 'report a vuln',
+  bitcoin: 'the whitepaper',
   theme: 'change terminal or colors',
   clear: 'clear the screen',
 };
@@ -93,9 +95,10 @@ const table: Record<string, (ctx: Context) => Result> = {
     lines: [plain('● bug bounties: active'), plain('● consulting: open, part-time, remote')],
   }),
   contact: () => ({ lines: [[{ text: 'hello@icns.ca', href: 'mailto:hello@icns.ca' }]] }),
-  'cat security.txt': (ctx) => ({
+  'security.txt': (ctx) => ({
     lines: ctx.securityTxt.replace(/\s+$/, '').split('\n').map(plain),
   }),
+  bitcoin: () => ({ lines: [[{ text: 'icns.ca/bitcoin.pdf', href: '/bitcoin.pdf' }]] }),
   resume: (ctx) => {
     const li = ctx.profiles.find((p) => p.id === 'linkedin');
     return { lines: li ? [[{ text: li.url.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, ''), href: li.url }]] : [] };
@@ -144,8 +147,12 @@ export function run(input: string, ctx: Context, env: Env = DEFAULT_ENV): Result
 }
 
 /** Tab completion: the site's commands, then the current shell's own. */
+// Listed in help but left out of tab completion.
+const NO_COMPLETE: readonly string[] = ['security.txt'];
+
 export function completions(env: Env = DEFAULT_ENV): string[] {
-  return [...PUBLIC_COMMANDS, ...osCompletions(env).filter((c) => !PUBLIC_COMMANDS.includes(c))];
+  const site = PUBLIC_COMMANDS.filter((c) => !NO_COMPLETE.includes(c));
+  return [...site, ...osCompletions(env).filter((c) => !site.includes(c))];
 }
 
 export function complete(partial: string, env: Env = DEFAULT_ENV): string[] {
