@@ -141,6 +141,12 @@ describe('mountTerminal', () => {
     expect(root.dataset.theme).toBe('default');
   });
 
+  it('maps the old stored name cmdline to cmd.exe', () => {
+    localStorage.setItem('icns-terminal-theme', 'cmdline');
+    mount();
+    expect(root.dataset.theme).toBe('cmd.exe');
+  });
+
   it('defaults to blue and ignores invalid stored theme', () => {
     localStorage.setItem('icns-terminal-theme', 'plaid');
     mount();
@@ -201,7 +207,7 @@ describe('mountTerminal', () => {
       ['arch', '[visitor@icns.ca ~]$', 'bash: nope: command not found'],
       ['opensuse', 'visitor@icns.ca:~>', 'bash: nope: command not found'],
       ['macosx', 'visitor@icns.ca ~ %', 'zsh: command not found: nope'],
-      ['cmdline', 'C:\\Users\\visitor>', 'operable program or batch file.'],
+      ['cmd.exe', 'C:\\Users\\visitor>', 'operable program or batch file.'],
       ['powershell', 'PS C:\\Users\\visitor>', 'verify that the path is correct and try again.'],
       ['blue', 'visitor@icns.ca ➜  ~', 'zsh: command not found: nope'],
       ['rainbow', 'visitor@icns.ca ➜  ~', 'zsh: command not found: nope'],
@@ -224,7 +230,7 @@ describe('mountTerminal', () => {
     expect(bold('ubuntu')).toEqual(['visitor@icns.ca', '~']);
     expect(bold('debian')).toEqual([]);
     expect(bold('macosx')).toEqual([]);
-    expect(bold('cmdline')).toEqual([]);
+    expect(bold('cmd.exe')).toEqual([]);
     expect(bold('powershell')).toEqual([]);
 
     submit('theme kali');

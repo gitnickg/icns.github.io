@@ -56,7 +56,7 @@ const PROMPTS: Partial<Record<Theme, Prompt>> = {
   },
   // macOS zsh: %n@%m %1~ %#
   macosx: { main: [{ text: 'visitor@icns.ca ~ %', cls: 'p-sym' }] },
-  cmdline: { main: [{ text: 'C:\\Users\\visitor>', cls: 'p-sym' }] },
+  'cmd.exe': { main: [{ text: 'C:\\Users\\visitor>', cls: 'p-sym' }] },
   powershell: { main: [{ text: 'PS C:\\Users\\visitor>', cls: 'p-sym' }] },
 };
 
@@ -70,7 +70,7 @@ const ENVS: Partial<Record<Theme, Env>> = {
   opensuse: { shell: 'bash', os: 'opensuse' },
   kali: { shell: 'zsh', os: 'kali' },
   macosx: { shell: 'zsh', os: 'macos' },
-  cmdline: { shell: 'cmd', os: 'windows' },
+  'cmd.exe': { shell: 'cmd', os: 'windows' },
   powershell: { shell: 'ps', os: 'windows' },
 };
 

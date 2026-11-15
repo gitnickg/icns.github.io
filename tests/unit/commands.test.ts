@@ -41,11 +41,11 @@ describe('run', () => {
   it('errors follow the theme\'s shell', () => {
     expect(text(run('nope', ctx))).toEqual(['zsh: command not found: nope']);
     expect(text(run('nope', ctx, envFor('ubuntu')))).toEqual(['bash: nope: command not found']);
-    expect(text(run('nope', ctx, envFor('cmdline')))).toEqual(["'nope' is not recognized as an internal or external command,", 'operable program or batch file.']);
+    expect(text(run('nope', ctx, envFor('cmd.exe')))).toEqual(["'nope' is not recognized as an internal or external command,", 'operable program or batch file.']);
     expect(text(run('nope', ctx, envFor('powershell')))[0]).toBe("nope: The term 'nope' is not recognized as a name of a cmdlet, function, script file, or executable program.");
     expect(text(run('cd /tmp', ctx))).toEqual(['cd: no such file or directory: /tmp']);
     expect(text(run('cd /tmp', ctx, envFor('debian')))).toEqual(['bash: cd: /tmp: No such file or directory']);
-    expect(text(run('cd /tmp', ctx, envFor('cmdline')))).toEqual(['The system cannot find the path specified.']);
+    expect(text(run('cd /tmp', ctx, envFor('cmd.exe')))).toEqual(['The system cannot find the path specified.']);
     expect(text(run('cd /tmp', ctx, envFor('powershell')))).toEqual(["Set-Location: Cannot find path '/tmp' because it does not exist."]);
   });
   it('resume links to LinkedIn', () => {
@@ -101,7 +101,7 @@ describe('run', () => {
     expect(text(run('uptime', ctx, mac))[0]).toMatch(/^\d\d:\d\d  up \d+ mins?, 1 user, load averages: /);
   });
   it('cmd.exe', () => {
-    const cmd = envFor('cmdline');
+    const cmd = envFor('cmd.exe');
     const dir = text(run('dir', ctx, cmd));
     expect(dir[3]).toBe(' Directory of C:\\Users\\visitor');
     expect(dir.some((l) => l.endsWith(' security.txt'))).toBe(true);

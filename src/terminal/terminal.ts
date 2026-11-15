@@ -15,8 +15,10 @@ function prefersReducedMotion(): boolean {
 
 function readTheme(): Theme {
   try {
-    // 'ghostty' was the default theme's old name.
-    const v = localStorage.getItem(STORAGE_KEY)?.replace(/^ghostty$/, 'default');
+    // Old theme names: 'ghostty' is now 'default', 'cmdline' is now 'cmd.exe'.
+    const old: Record<string, Theme> = { ghostty: 'default', cmdline: 'cmd.exe' };
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const v = stored && Object.hasOwn(old, stored) ? old[stored] : stored;
     const t = THEMES.find((x) => x === v);
     if (t) return t;
   } catch {

@@ -120,7 +120,7 @@
 }
 [data-theme="macosx"] .term-logo path { stroke: #1c3ed3; }
 [data-theme="macosx"] .term-logo circle { fill: #0e1838; }
-[data-theme="cmdline"] {
+[data-theme="cmd.exe"] {
   --term-bg: #0c0c0c; --term-chrome: #1f1f1f; --term-border: #3a3a3a; --term-dot: #3a3a3a;
   --term-fg: #cccccc; --term-accent: #61a0ff; --term-cmd: #cccccc;
   --p-sym: #cccccc;
