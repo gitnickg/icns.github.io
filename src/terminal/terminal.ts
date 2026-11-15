@@ -1,5 +1,6 @@
 import { run, complete, INTRO, type Context, type Line, type Theme } from './commands';
 import { startMatrix } from './matrix';
+import { startReboot, startRm } from './effects';
 import { isSafeHref } from '../lib/links';
 
 const PROMPT = 'visitor@icns.ca:~$';
@@ -93,6 +94,27 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
 
   let stopMatrix: (() => void) | null = null;
 
+  // Screen effects lock the prompt until they finish (or a key/pointer press skips them).
+  const runEffect = (start: typeof startReboot, after?: () => void) => {
+    const hadFocus = document.activeElement === input;
+    input.disabled = true;
+    start({
+      root,
+      output,
+      reducedMotion: reduced,
+      print: (text) => {
+        output.appendChild(renderLine([{ text }]));
+        scroll();
+      },
+      done: () => {
+        after?.();
+        input.disabled = false;
+        if (hadFocus) input.focus({ preventScroll: true });
+        scroll();
+      },
+    });
+  };
+
   const printResult = (cmd: string) => {
     const result = run(cmd, ctx);
     const eff = result.effect;
@@ -107,6 +129,13 @@ export function mountTerminal(root: HTMLElement, ctx: Context, opts: TerminalOpt
     } else if (eff?.kind === 'matrix') {
       stopMatrix?.();
       stopMatrix = reduced ? startMatrix(output, true) : startMatrix(root, false);
+    } else if (eff?.kind === 'reboot') {
+      runEffect(startReboot, () => {
+        echo(INTRO[0]);
+        printResult(INTRO[0]);
+      });
+    } else if (eff?.kind === 'rm') {
+      runEffect(startRm);
     }
     scroll();
   };

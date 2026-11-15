@@ -3,7 +3,7 @@ import type { Profile } from '../lib/profiles';
 export type Segment = { text: string; href?: string };
 export type Line = Segment[];
 export type Theme = 'blue' | 'green' | 'amber';
-export type Effect = { kind: 'clear' } | { kind: 'matrix' } | { kind: 'theme'; theme: Theme };
+export type Effect = { kind: 'clear' } | { kind: 'matrix' } | { kind: 'reboot' } | { kind: 'rm' } | { kind: 'theme'; theme: Theme };
 export type Context = { profiles: Profile[]; securityTxt: string };
 export type Result = { lines: Line[]; effect?: Effect };
 
@@ -66,6 +66,14 @@ const table: Record<string, (ctx: Context) => Result> = {
   }),
   clear: () => ({ lines: [], effect: { kind: 'clear' } }),
   matrix: () => ({ lines: [], effect: { kind: 'matrix' } }),
+  reboot: () => ({ lines: [], effect: { kind: 'reboot' } }),
+  'sudo reboot': () => ({ lines: [], effect: { kind: 'reboot' } }),
+  'rm -rf /': () => ({ lines: [], effect: { kind: 'rm' } }),
+  'sudo rm -rf /': () => ({ lines: [], effect: { kind: 'rm' } }),
+  'rm -rf /*': () => ({ lines: [], effect: { kind: 'rm' } }),
+  'sudo rm -rf /*': () => ({ lines: [], effect: { kind: 'rm' } }),
+  'rm -rf --no-preserve-root /': () => ({ lines: [], effect: { kind: 'rm' } }),
+  'sudo rm -rf --no-preserve-root /': () => ({ lines: [], effect: { kind: 'rm' } }),
   irc: () => ({ lines: [plain('* gitnickg has joined #icns')] }),
   'sudo make me a sandwich': () => ({ lines: [plain('Okay.')] }),
   passwd: () => ({ lines: [plain('hunter2')] }),

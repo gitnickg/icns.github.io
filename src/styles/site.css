@@ -225,6 +225,29 @@ a:hover { text-decoration-thickness: 2px; }
   pointer-events: none;
 }
 
+/* Hidden-command effects: reboot blanks the screen, rm makes parts of the page disappear. */
+.terminal .term-body,
+.terminal .term-chips,
+.terminal .term-chrome,
+.site-footer,
+.term-line {
+  transition: opacity 0.3s ease, visibility 0s linear 0s;
+}
+.term-off .term-body { opacity: 0; }
+.rm-gone {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .terminal .term-body,
+  .terminal .term-chips,
+  .terminal .term-chrome,
+  .site-footer,
+  .term-line,
+  .rm-gone { transition: none; }
+}
+
 /* ---------- Footer, 404 ---------- */
 
 .site-footer {
