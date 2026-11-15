@@ -135,10 +135,16 @@ describe('mountTerminal', () => {
     expect(root.dataset.theme).toBe('amber');
   });
 
+  it('maps the old stored name ghostty to default', () => {
+    localStorage.setItem('icns-terminal-theme', 'ghostty');
+    mount();
+    expect(root.dataset.theme).toBe('default');
+  });
+
   it('defaults to blue and ignores invalid stored theme', () => {
     localStorage.setItem('icns-terminal-theme', 'plaid');
     mount();
-    expect(root.dataset.theme).toBe('ghostty');
+    expect(root.dataset.theme).toBe('default');
   });
 
   it('survives localStorage throwing', () => {
@@ -149,7 +155,7 @@ describe('mountTerminal', () => {
       throw new Error('denied');
     });
     mount();
-    expect(root.dataset.theme).toBe('ghostty');
+    expect(root.dataset.theme).toBe('default');
     submit('theme green');
     expect(root.dataset.theme).toBe('green');
   });

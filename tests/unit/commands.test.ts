@@ -54,7 +54,7 @@ describe('run', () => {
     expect(text(run('help', ctx)).some((l) => l.startsWith('resume'))).toBe(true);
     expect(text(run('help', ctx)).some((l) => l.startsWith('status'))).toBe(true);
   });
-  it('linux shell basics (default ghostty: zsh on Debian)', () => {
+  it('linux shell basics (default: zsh on Debian)', () => {
     expect(text(run('pwd', ctx))).toEqual(['/home/visitor']);
     expect(text(run('hostname', ctx))).toEqual(['icns.ca']);
     expect(text(run('id', ctx))).toEqual(['uid=1000(visitor) gid=1000(visitor) groups=1000(visitor)']);
@@ -138,7 +138,7 @@ describe('run', () => {
     expect(text(run('cat security.txt', ctx))).toEqual(['Contact: mailto:hello@icns.ca', 'Expires: 2030-01-01']);
   });
   it('theme', () => {
-    const usage = ['usage: theme <name>', `terminals: ${TERMINALS.join(' ')}`, `colors (ghostty): ${COLORS.join(' ')}`];
+    const usage = ['usage: theme <name>', `terminals: ${TERMINALS.join(' ')}`, `colors (default): ${COLORS.join(' ')}`];
     expect(THEMES).toEqual([...TERMINALS, ...COLORS]);
     expect(text(run('theme', ctx))).toEqual(usage);
     for (const t of ['solarized', 'dracula', 'nord', 'gruvbox', 'monokai', 'rainbow', 'pink'])

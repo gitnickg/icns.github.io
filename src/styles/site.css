@@ -58,7 +58,7 @@
 [data-theme="pink"] { --term-fg: #ff8ad8; --term-accent: #ffc8ec; --term-cmd: #ffc8ec; }
 
 /* Terminal look-alikes: each terminal's default colours, with its shell's prompt (see src/terminal/shells.ts). */
-[data-theme="ghostty"] {
+[data-theme="default"] {
   --term-bg: #282c34; --term-chrome: #21252b; --term-border: #3a3f4b; --term-dot: #3a3f4b;
   --term-fg: #ffffff; --term-accent: #56b6c2; --term-cmd: #ffffff;
   --p-user: #ffffff; --p-ok: #98c379; --p-dir: #56b6c2;

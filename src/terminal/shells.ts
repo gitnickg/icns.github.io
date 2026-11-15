@@ -11,8 +11,9 @@ export type Flavor = 'bash' | 'zsh' | 'cmd' | 'ps';
 export type Os = 'debian' | 'ubuntu' | 'kali' | 'macos' | 'windows';
 export type Env = { shell: Flavor; os: Os };
 
-// Ghostty running Oh My Zsh's default theme, with the user and host in front. The colour themes reuse it.
-const GHOSTTY: Prompt = {
+// The default terminal: a Ghostty-style window running Oh My Zsh's default prompt, with the user and host in front.
+// The colour themes reuse it.
+const DEFAULT_PROMPT: Prompt = {
   main: [{ text: 'visitor@icns.ca', cls: 'p-user' }, { text: ' ' }, { text: '➜', cls: 'p-ok' }, { text: '  ' }, { text: '~', cls: 'p-dir' }],
 };
 
@@ -47,8 +48,8 @@ const ENVS: Partial<Record<Theme, Env>> = {
   powershell: { shell: 'ps', os: 'windows' },
 };
 
-/** Ghostty and every colour theme share the ghostty prompt and shell. */
-export const promptFor = (t: Theme): Prompt => PROMPTS[t] ?? GHOSTTY;
+/** The default terminal and every colour theme share the default prompt and shell. */
+export const promptFor = (t: Theme): Prompt => PROMPTS[t] ?? DEFAULT_PROMPT;
 export const envFor = (t: Theme): Env => ENVS[t] ?? DEFAULT_ENV;
 
 export function notFound(cmd: string, flavor: Flavor): string[] {

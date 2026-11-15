@@ -15,7 +15,8 @@ function prefersReducedMotion(): boolean {
 
 function readTheme(): Theme {
   try {
-    const v = localStorage.getItem(STORAGE_KEY);
+    // 'ghostty' was the default theme's old name.
+    const v = localStorage.getItem(STORAGE_KEY)?.replace(/^ghostty$/, 'default');
     const t = THEMES.find((x) => x === v);
     if (t) return t;
   } catch {
