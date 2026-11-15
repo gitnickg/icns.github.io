@@ -58,15 +58,15 @@ function bootLog(now: Date): string[] {
     '[  OK  ] Started ssh.service - OpenBSD Secure Shell server.',
     '[  OK  ] Reached target multi-user.target - Multi-User System.',
     '',
-    'Debian GNU/Linux 13 icns tty1',
+    'Debian GNU/Linux 13 icns.ca tty1',
     '',
-    'icns login: visitor',
+    'icns.ca login: visitor',
     `Last login: ${loginDate(now)} on tty1`,
     '',
   ];
 }
 
-export function startReboot(host: EffectHost): () => void {
+export function startRestart(host: EffectHost): () => void {
   const { root, output, print, done, reducedMotion } = host;
   if (reducedMotion) {
     output.replaceChildren();
@@ -92,7 +92,7 @@ export function startReboot(host: EffectHost): () => void {
   });
 }
 
-export function startRm(host: EffectHost): () => void {
+export function startWipe(host: EffectHost): () => void {
   const { root, output, print, done, reducedMotion } = host;
   if (reducedMotion) {
     print("rm: refusing to remove '/'");

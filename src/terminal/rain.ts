@@ -2,7 +2,7 @@ const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄ0123
 const WAKE_UP = 'wake up, visitor…';
 
 /** Falling-glyph overlay. Returns a stop function. */
-export function startMatrix(container: HTMLElement, reducedMotion: boolean): () => void {
+export function startRain(container: HTMLElement, reducedMotion: boolean): () => void {
   if (reducedMotion) {
     const line = document.createElement('div');
     line.className = 'term-line';
@@ -12,7 +12,7 @@ export function startMatrix(container: HTMLElement, reducedMotion: boolean): () 
   }
 
   const canvas = document.createElement('canvas');
-  canvas.className = 'term-matrix';
+  canvas.className = 'term-rain';
   canvas.setAttribute('aria-hidden', 'true');
   const g = canvas.getContext('2d');
   if (!g) return () => {};
