@@ -3,7 +3,23 @@ import { md5 } from './md5';
 
 export type Segment = { text: string; href?: string };
 export type Line = Segment[];
-export type Theme = 'blue' | 'green' | 'amber';
+export const THEMES = [
+  'blue',
+  'green',
+  'amber',
+  'white',
+  'red',
+  'cyan',
+  'purple',
+  'pink',
+  'solarized',
+  'dracula',
+  'nord',
+  'gruvbox',
+  'monokai',
+  'rainbow',
+] as const;
+export type Theme = (typeof THEMES)[number];
 export type Effect = { kind: 'clear' } | { kind: 'rain' } | { kind: 'restart' } | { kind: 'wipe' } | { kind: 'theme'; theme: Theme };
 export type Context = { profiles: Profile[]; securityTxt: string };
 export type Result = { lines: Line[]; effect?: Effect };
@@ -21,8 +37,7 @@ export const PUBLIC_COMMANDS: readonly string[] = [
 ];
 export const INTRO: readonly string[] = ['whoami'];
 
-const THEMES: readonly Theme[] = ['blue', 'green', 'amber'];
-const THEME_USAGE = 'usage: theme blue / green / amber';
+const THEME_USAGE: Line[] = [[{ text: 'usage: theme <name>' }], [{ text: `themes: ${THEMES.join(' ')}` }]];
 
 const plain = (s: string): Line => [{ text: s }];
 
@@ -173,7 +188,7 @@ export function run(input: string, ctx: Context): Result {
   if (norm === 'theme' || norm.startsWith('theme ')) {
     const arg = norm.slice(5).trim();
     const theme = THEMES.find((t) => t === arg);
-    if (!theme) return { lines: [plain(THEME_USAGE)] };
+    if (!theme) return { lines: THEME_USAGE };
     return { lines: [plain(`theme set to ${theme}`)], effect: { kind: 'theme', theme } };
   }
   if (Object.hasOwn(table, norm)) return table[norm](ctx);

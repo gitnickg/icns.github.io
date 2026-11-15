@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { run, complete, PUBLIC_COMMANDS, COMPLETIONS, INTRO, type Context } from '../../src/terminal/commands';
+import { run, complete, PUBLIC_COMMANDS, COMPLETIONS, THEMES, INTRO, type Context } from '../../src/terminal/commands';
 
 const ctx: Context = {
   profiles: [
@@ -73,13 +73,16 @@ describe('run', () => {
     expect(text(run('cat security.txt', ctx))).toEqual(['Contact: mailto:hello@icns.ca', 'Expires: 2030-01-01']);
   });
   it('theme', () => {
-    expect(text(run('theme', ctx))).toEqual(['usage: theme blue / green / amber']);
+    const usage = ['usage: theme <name>', `themes: ${THEMES.join(' ')}`];
+    expect(text(run('theme', ctx))).toEqual(usage);
+    for (const t of ['solarized', 'dracula', 'nord', 'gruvbox', 'monokai', 'rainbow', 'pink'])
+      expect(run(`theme ${t}`, ctx).effect).toEqual({ kind: 'theme', theme: t });
     expect(run('theme', ctx).effect).toBeUndefined();
     const g = run('theme green', ctx);
     expect(text(g)).toEqual(['theme set to green']);
     expect(g.effect).toEqual({ kind: 'theme', theme: 'green' });
-    const bad = run('theme pink', ctx);
-    expect(text(bad)).toEqual(['usage: theme blue / green / amber']);
+    const bad = run('theme plaid', ctx);
+    expect(text(bad)).toEqual(usage);
     expect(bad.effect).toBeUndefined();
   });
   it('clear and the hidden screen effects', () => {
