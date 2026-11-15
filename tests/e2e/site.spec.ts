@@ -45,6 +45,20 @@ test('axe scan of /404.html has zero violations', async ({ page }) => {
   await scan(page);
 });
 
+test('the preloaded font is one the page uses, fetched once, with no preload warning', async ({ page }) => {
+  const fonts: string[] = [];
+  const warnings: string[] = [];
+  page.on('request', (r) => r.resourceType() === 'font' && fonts.push(new URL(r.url()).pathname));
+  page.on('console', (m) => m.text().includes('preload') && warnings.push(m.text()));
+  await page.goto('/', { waitUntil: 'networkidle' });
+  const href = await page.locator('link[rel="preload"][as="font"]').getAttribute('href');
+  expect(href).toBe('/fonts/schibsted-grotesk-latin-400-normal.woff2');
+  expect(fonts.filter((f) => f === href)).toHaveLength(1);
+  // Chrome warns a few seconds after load if a preload goes unused.
+  await page.waitForTimeout(3500);
+  expect(warnings).toEqual([]);
+});
+
 test('every request during load is same-origin', async ({ page, baseURL }) => {
   const origin = new URL(baseURL!).origin;
   const urls: string[] = [];
