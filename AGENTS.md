@@ -4,8 +4,8 @@ Static site for icns consulting inc. (https://icns.ca), Halifax, Nova Scotia. As
 
 ## Rules
 
-- Zero runtime UI framework; the terminal is vanilla TypeScript in `src/terminal/`. No third-party scripts or fonts in the source, no CDN, no trackers. Any analytics is the owner's call and is configured in Cloudflare, not in this repo.
-- Write markup that works under `script-src 'self'; style-src 'self'`: no inline `<script>`, no inline `<style>`, no `style` attributes (including in SVG). Built HTML is tested for this. GitHub Pages cannot send headers; the CSP and other security headers are set by a Cloudflare response-header rule, so changing what the page loads may also need that rule updated.
+- Zero runtime UI framework; the terminal is vanilla TypeScript in `src/terminal/`. No third-party scripts or fonts in the source, no CDN. The one exception is Google Analytics 4 (owner's choice, 2026-11-15): `gtag.js` loaded in `Base.astro`, setup in `public/analytics.js`, ID and CSP in `src/lib/analytics.ts`. Don't add other trackers or switch to Google Tag Manager (a GTM container can inject arbitrary scripts).
+- Write markup that works under the CSP in `src/lib/analytics.ts` (`script-src 'self'` plus GA4's hosts; `style-src 'self'`): no inline `<script>`, no inline `<style>`, no `style` attributes (including in SVG). Built HTML is tested for this, and an e2e test loads the page under that CSP and fails on any violation. GitHub Pages cannot send headers; the CSP and other security headers are set by a Cloudflare response-header rule, so if you change the CSP in `analytics.ts`, the owner must update that rule to match.
 - Cloudflare Email Obfuscation must stay off: it rewrites `visitor@icns.ca` in the prompt and injects a script.
 - Fonts: only Schibsted Grotesk 400 and 700 are self-hosted. Don't add weights that nothing uses; hidden text still downloads its font.
 - Link previews use `public/images/og.png` (1200×630), referenced absolutely in `src/layouts/Base.astro`.

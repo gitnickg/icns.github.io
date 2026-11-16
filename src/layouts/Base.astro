@@ -1,6 +1,7 @@
 ---
 import '../styles/site.css';
 import Footer from '../components/Footer.astro';
+import { GA_SCRIPT } from '../lib/analytics';
 
 interface Props {
   title?: string;
@@ -58,6 +59,9 @@ const { title = 'icns', description = DEFAULT_DESCRIPTION, canonical, noindex = 
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0b1020" />
     <meta name="color-scheme" content="dark" />
+    <!-- Google Analytics 4: the only third-party script. Setup lives in /analytics.js (no inline code). -->
+    <script is:inline async src={GA_SCRIPT}></script>
+    <script is:inline defer src="/analytics.js"></script>
   </head>
   <body>
     <slot />
