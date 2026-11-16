@@ -208,7 +208,7 @@ test('axe scan of /privacy/ has zero violations', async ({ page }) => {
   await scan(page);
 });
 
-test('privacy and bitcoin print clickable links; the footer links to /privacy/', async ({ page }) => {
+test('privacy and bitcoin print clickable links; the footer has no privacy link', async ({ page }) => {
   await page.goto('/');
   const out = page.locator('[data-term-output]');
   await submit(page, 'privacy');
@@ -216,7 +216,7 @@ test('privacy and bitcoin print clickable links; the footer links to /privacy/',
   await expect(out.locator('a[href="https://tools.google.com/dlpage/gaoptout"]')).toBeVisible();
   await submit(page, 'bitcoin');
   await expect(out.locator('a[href="https://icns.ca/bitcoin.pdf"]')).toBeVisible();
-  await expect(page.locator('footer a[href="/privacy/"]')).toBeVisible();
+  await expect(page.locator('footer a[href="/privacy/"]')).toHaveCount(0);
 });
 
 test('static files return 200', async ({ request }) => {

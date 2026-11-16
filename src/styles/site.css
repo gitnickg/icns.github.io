@@ -431,7 +431,6 @@ a:hover { text-decoration-thickness: 2px; }
 .doc p { margin: 0 0 1rem; line-height: 1.6; }
 .doc a { color: var(--blue); }
 .doc .doc-meta { margin-top: 1.75rem; color: var(--ink-soft); font-size: 0.875rem; }
-.footer-sep { margin: 0 0.5em; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
