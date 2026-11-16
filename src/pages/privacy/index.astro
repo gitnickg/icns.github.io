@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import { isSafeHref } from '../../lib/links';
+import { PRIVACY, PRIVACY_UPDATED } from '../../data/privacy';
+---
+
+<Base title="Privacy | icns" description="What icns.ca collects: Google Analytics 4 visit counts, and nothing else." canonical="https://icns.ca/privacy/">
+  <main class="page doc">
+    <h1>Privacy</h1>
+    {
+      PRIVACY.map((line) => (
+        <p>{line.map((seg) => (isSafeHref(seg.href) ? <a href={seg.href} rel={seg.href.startsWith('https:') ? 'noopener noreferrer' : undefined}>{seg.text}</a> : seg.text))}</p>
+      ))
+    }
+    <p class="doc-meta">Updated <time datetime={PRIVACY_UPDATED}>{PRIVACY_UPDATED}</time>. <a href="/">cd ~ (back to icns.ca)</a></p>
+  </main>
+</Base>

@@ -63,8 +63,9 @@ describe('index.html', () => {
   test('footer has only the copyright and profile icon links', () => {
     const footer = doc.querySelector('footer#contact')!;
     expect(footer).not.toBeNull();
-    expect(footer.querySelector('p')?.textContent).toBe('© icns consulting inc., Halifax, Nova Scotia');
-    const links = [...footer.querySelectorAll('a')];
+    expect(footer.querySelector('p')?.textContent).toBe('© icns consulting inc., Halifax, Nova Scotia·privacy');
+    expect(footer.querySelector('p a')?.getAttribute('href')).toBe('/privacy/');
+    const links = [...footer.querySelectorAll('ul a')];
     expect(links.map((a) => [a.getAttribute('href'), a.getAttribute('aria-label')])).toEqual([
       ['https://www.linkedin.com/in/gitnickg/', 'LinkedIn'],
       ['https://github.com/gitnickg', 'GitHub'],
@@ -126,8 +127,23 @@ test('404.html exists with noindex and one h1', () => {
   expect([...doc.querySelectorAll('script')].filter((s) => !s.hasAttribute('src'))).toHaveLength(0);
 });
 
-test('sitemap.xml lists https://icns.ca/', () => {
+test('privacy/index.html: one h1, indexable, canonical, the GA4 note, no inline scripts', () => {
+  const doc = load('privacy/index.html');
+  expect(doc.querySelectorAll('h1')).toHaveLength(1);
+  expect(doc.querySelector('meta[name="robots"]')).toBeNull();
+  expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://icns.ca/privacy/');
+  expect(doc.querySelector('meta[property="og:url"]')?.getAttribute('content')).toBe('https://icns.ca/privacy/');
+  const text = doc.querySelector('main')?.textContent ?? '';
+  expect(text).toContain('Google Analytics 4');
+  expect(text.toLowerCase()).not.toContain('private');
+  expect(doc.querySelector('a[href="https://tools.google.com/dlpage/gaoptout"]')).not.toBeNull();
+  expect(doc.querySelector('a[href="mailto:hello@icns.ca"]')).not.toBeNull();
+  expect([...doc.querySelectorAll('script')].filter((s) => !s.hasAttribute('src'))).toHaveLength(0);
+});
+
+test('sitemap.xml lists https://icns.ca/ and /privacy/', () => {
   const xml = readFileSync('dist/sitemap.xml', 'utf8');
   expect(xml).toContain('<loc>https://icns.ca/</loc>');
+  expect(xml).toContain('<loc>https://icns.ca/privacy/</loc>');
   expect(xml).toMatch(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
 });

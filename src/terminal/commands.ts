@@ -3,6 +3,7 @@ import { md5 } from './md5';
 import { DEFAULT_ENV, notFound, type Env } from './shells';
 import { osCommand, osCompletions } from './os';
 import { secTool } from './sec';
+import { PRIVACY } from '../data/privacy';
 
 export type Segment = { text: string; href?: string };
 export type Line = Segment[];
@@ -42,6 +43,7 @@ export const PUBLIC_COMMANDS: readonly string[] = [
   'resume',
   'contact',
   'security.txt',
+  'privacy',
   'bitcoin',
   'theme',
   'clear',
@@ -64,6 +66,7 @@ const DESCRIPTIONS: Record<string, string> = {
   resume: 'work history',
   contact: 'get in touch',
   'security.txt': 'report a vuln',
+  privacy: 'what this site collects',
   bitcoin: 'the whitepaper',
   theme: 'change terminal or colors',
   clear: 'clear the screen',
@@ -98,7 +101,10 @@ const table: Record<string, (ctx: Context) => Result> = {
   'security.txt': (ctx) => ({
     lines: ctx.securityTxt.replace(/\s+$/, '').split('\n').map(plain),
   }),
-  bitcoin: () => ({ lines: [[{ text: 'icns.ca/bitcoin.pdf', href: '/bitcoin.pdf' }]] }),
+  privacy: () => ({
+    lines: [...PRIVACY.map((l): Line => l.map((s) => ({ ...s }))), plain(''), [{ text: 'icns.ca/privacy', href: 'https://icns.ca/privacy/' }]],
+  }),
+  bitcoin: () => ({ lines: [[{ text: 'icns.ca/bitcoin.pdf', href: 'https://icns.ca/bitcoin.pdf' }]] }),
   resume: (ctx) => {
     const li = ctx.profiles.find((p) => p.id === 'linkedin');
     return { lines: li ? [[{ text: li.url.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, ''), href: li.url }]] : [] };
