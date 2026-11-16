@@ -5,7 +5,7 @@
 export type PrivacySegment = { text: string; href?: string };
 export type PrivacyLine = PrivacySegment[];
 
-export const PRIVACY_UPDATED = '2026-11-15';
+export const PRIVACY_UPDATED = '2026-11-16';
 
 export const PRIVACY: PrivacyLine[] = [
   [
@@ -14,6 +14,7 @@ export const PRIVACY: PrivacyLine[] = [
     },
   ],
   [{ text: 'Google sets first-party cookies (_ga) to tell new visits from repeat ones. GA4 does not log or store IP addresses.' }],
+  [{ text: 'Cloudflare Web Analytics also counts visits and measures page load times. It uses no cookies.' }],
   [{ text: 'The data is used only to see how the site is used. No ads, and the data is not sold.' }],
   [{ text: 'The site is delivered by Cloudflare and GitHub Pages, which process standard request data, such as IP address, to serve and protect it.' }],
   [{ text: 'The terminal runs in your browser. The only thing it stores is your theme choice (localStorage).' }],
