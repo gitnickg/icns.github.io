@@ -63,9 +63,8 @@ describe('index.html', () => {
   test('footer has only the copyright and profile icon links', () => {
     const footer = doc.querySelector('footer#contact')!;
     expect(footer).not.toBeNull();
-    expect(footer.querySelector('p')?.textContent).toBe('© icns consulting inc., Halifax, Nova Scotia·privacy');
-    expect(footer.querySelector('p a')?.getAttribute('href')).toBe('/privacy/');
-    const links = [...footer.querySelectorAll('ul a')];
+    expect(footer.querySelector('p')?.textContent).toBe('© icns consulting inc., Halifax, Nova Scotia');
+    const links = [...footer.querySelectorAll('a')];
     expect(links.map((a) => [a.getAttribute('href'), a.getAttribute('aria-label')])).toEqual([
       ['https://www.linkedin.com/in/gitnickg/', 'LinkedIn'],
       ['https://github.com/gitnickg', 'GitHub'],
