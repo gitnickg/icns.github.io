@@ -202,6 +202,23 @@ test('/contact/ ends at /#contact', async ({ page }) => {
   expect(new URL(page.url()).hash).toBe('#contact');
 });
 
+test('axe scan of /privacy/ has zero violations', async ({ page }) => {
+  await page.goto('/privacy/');
+  await expect(page.locator('h1')).toHaveText('Privacy');
+  await scan(page);
+});
+
+test('privacy and bitcoin print clickable links; the footer links to /privacy/', async ({ page }) => {
+  await page.goto('/');
+  const out = page.locator('[data-term-output]');
+  await submit(page, 'privacy');
+  await expect(out.locator('a[href="https://icns.ca/privacy/"]')).toBeVisible();
+  await expect(out.locator('a[href="https://tools.google.com/dlpage/gaoptout"]')).toBeVisible();
+  await submit(page, 'bitcoin');
+  await expect(out.locator('a[href="https://icns.ca/bitcoin.pdf"]')).toBeVisible();
+  await expect(page.locator('footer a[href="/privacy/"]')).toBeVisible();
+});
+
 test('static files return 200', async ({ request }) => {
   for (const p of ['/bitcoin.pdf', '/.well-known/security.txt']) {
     expect((await request.get(p)).status(), p).toBe(200);

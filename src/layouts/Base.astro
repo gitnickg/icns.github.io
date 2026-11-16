@@ -33,7 +33,7 @@ const { title = 'icns', description = DEFAULT_DESCRIPTION, canonical, noindex = 
       !noindex && (
         <>
           <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://icns.ca/" />
+          <meta property="og:url" content={canonical ?? 'https://icns.ca/'} />
           <meta property="og:site_name" content="icns consulting inc." />
           <meta property="og:title" content={title} />
           <meta property="og:description" content={description} />

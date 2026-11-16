@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { envFor } from '../../src/terminal/shells';
+import { PRIVACY } from '../../src/data/privacy';
 import { run, complete, completions, PUBLIC_COMMANDS, THEMES, TERMINALS, COLORS, INTRO, type Context } from '../../src/terminal/commands';
 
 const ctx: Context = {
@@ -153,8 +154,15 @@ describe('run', () => {
     expect(text(run('cat security.txt', ctx, envFor('cmd.exe')))[0]).toMatch(/is not recognized/);
     expect(text(run('type security.txt', ctx))).toEqual(['zsh: command not found: type']);
   });
+  it('privacy prints the note from src/data/privacy.ts and links to the page', () => {
+    const lines = run('privacy', ctx).lines;
+    expect(lines.slice(0, PRIVACY.length)).toEqual(PRIVACY);
+    expect(lines.at(-1)).toEqual([{ text: 'icns.ca/privacy', href: 'https://icns.ca/privacy/' }]);
+    expect(completions()).toContain('privacy');
+  });
+
   it('bitcoin links to the whitepaper', () => {
-    expect(run('bitcoin', ctx).lines).toEqual([[{ text: 'icns.ca/bitcoin.pdf', href: '/bitcoin.pdf' }]]);
+    expect(run('bitcoin', ctx).lines).toEqual([[{ text: 'icns.ca/bitcoin.pdf', href: 'https://icns.ca/bitcoin.pdf' }]]);
   });
   it('theme', () => {
     const usage = ['usage: theme <name>', `terminals: ${TERMINALS.join(' ')}`, `colors (default): ${COLORS.join(' ')}`];
@@ -204,7 +212,7 @@ describe('complete', () => {
     expect(complete('')).toEqual(completions());
     for (const c of PUBLIC_COMMANDS.filter((c) => c !== 'security.txt')) expect(completions()).toContain(c);
     expect(completions()).not.toContain('security.txt');
-    expect(complete('p')).toEqual(['profiles', 'pwd']);
+    expect(complete('p')).toEqual(['profiles', 'privacy', 'pwd']);
     expect(complete('pa')).toEqual([]);
     expect(complete('cat')).toEqual(['cat']);
     expect(complete('sec')).toEqual([]);

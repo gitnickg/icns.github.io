@@ -19,6 +19,10 @@ export const GET: APIRoute = () => {
     <loc>https://icns.ca/</loc>
     <lastmod>${lastmod}</lastmod>
   </url>
+  <url>
+    <loc>https://icns.ca/privacy/</loc>
+    <lastmod>${lastmod}</lastmod>
+  </url>
 </urlset>
 `;
   return new Response(xml, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
