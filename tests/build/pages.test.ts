@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
+import { GA_ID, GA_SCRIPT } from '../../src/lib/analytics';
 
 const load = (f: string): Document => new DOMParser().parseFromString(readFileSync(join('dist', f), 'utf8'), 'text/html');
 
@@ -21,14 +22,21 @@ describe('index.html', () => {
     expect([...doc.querySelectorAll('[style]')].map((e) => e.outerHTML)).toEqual([]);
   });
 
-  test('scripts, links and images are same-origin', () => {
+  test('scripts, links and images are same-origin, except the one GA4 script', () => {
     const urls = [
       ...[...doc.querySelectorAll('script[src]')].map((e) => e.getAttribute('src')!),
       ...[...doc.querySelectorAll('link[href]')].map((e) => e.getAttribute('href')!),
       ...[...doc.querySelectorAll('img[src]')].map((e) => e.getAttribute('src')!),
     ];
     expect(urls.length).toBeGreaterThan(0);
-    expect(urls.filter((u) => !sameOrigin(u))).toEqual([]);
+    expect(urls.filter((u) => !sameOrigin(u))).toEqual([GA_SCRIPT]);
+  });
+
+  test('GA4 loads async with its setup from /analytics.js, and the IDs match', () => {
+    const ga = doc.querySelector(`script[src="${GA_SCRIPT}"]`);
+    expect(ga?.hasAttribute('async')).toBe(true);
+    expect(doc.querySelector('script[src="/analytics.js"]')?.hasAttribute('defer')).toBe(true);
+    expect(readFileSync(join('dist', 'analytics.js'), 'utf8')).toContain(`gtag('config', '${GA_ID}')`);
   });
 
   test('link previews use the large og.png card', () => {

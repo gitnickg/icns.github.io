@@ -1,5 +1,6 @@
 import { test, expect, devices } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { CSP, GA_ID } from '../../src/lib/analytics';
 
 const submit = async (page: import('@playwright/test').Page, cmd: string) => {
   const input = page.locator('input[data-term-input]');
@@ -59,13 +60,47 @@ test('the preloaded font is one the page uses, fetched once, with no preload war
   expect(warnings).toEqual([]);
 });
 
-test('every request during load is same-origin', async ({ page, baseURL }) => {
+// GA4 is the only third-party traffic allowed (hosts from Google's GA4 CSP guide).
+const isGaHost = (host: string) =>
+  host === 'www.googletagmanager.com' || host.endsWith('.google-analytics.com') || host.endsWith('.analytics.google.com');
+
+test('every request during load is same-origin or GA4', async ({ page, baseURL }) => {
   const origin = new URL(baseURL!).origin;
   const urls: string[] = [];
   page.on('request', (r) => urls.push(r.url()));
   await page.goto('/', { waitUntil: 'networkidle' });
   expect(urls.length).toBeGreaterThan(0);
-  for (const u of urls) expect(new URL(u).origin).toBe(origin);
+  const other = urls.filter((u) => new URL(u).origin !== origin && !isGaHost(new URL(u).hostname));
+  expect(other).toEqual([]);
+});
+
+test('GA4 sends a page_view for the site measurement ID', async ({ page }) => {
+  const hit = page.waitForRequest((r) => {
+    const u = new URL(r.url());
+    return isGaHost(u.hostname) && u.pathname.endsWith('/collect') && u.searchParams.get('tid') === GA_ID && u.searchParams.get('en') === 'page_view';
+  });
+  await page.goto('/');
+  await hit;
+});
+
+test('the page runs under the production CSP with no violations', async ({ page }) => {
+  // upgrade-insecure-requests is dropped here only because the preview server is plain http.
+  const csp = CSP.replace('; upgrade-insecure-requests', '');
+  await page.route('/', async (route) => {
+    const res = await route.fetch();
+    await route.fulfill({ response: res, headers: { ...res.headers(), 'content-security-policy': csp } });
+  });
+  await page.addInitScript(() => {
+    (window as unknown as { cspViolations: string[] }).cspViolations = [];
+    document.addEventListener('securitypolicyviolation', (e) =>
+      (window as unknown as { cspViolations: string[] }).cspViolations.push(`${e.violatedDirective} ${e.blockedURI}`),
+    );
+  });
+  const hit = page.waitForRequest((r) => isGaHost(new URL(r.url()).hostname) && new URL(r.url()).pathname.endsWith('/collect'));
+  await page.goto('/');
+  await hit;
+  await expect(page.locator('[data-term-output]')).toContainText('Independent Consultant @ icns.ca', { timeout: 15000 });
+  expect(await page.evaluate(() => (window as unknown as { cspViolations: string[] }).cspViolations)).toEqual([]);
 });
 
 test('a hidden command answers and help hints at more', async ({ page }) => {
