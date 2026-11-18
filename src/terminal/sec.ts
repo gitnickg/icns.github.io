@@ -65,7 +65,7 @@ function nmap(args: string[]): Result {
   );
 }
 
-const PING_MS = [4.2, 6.9, 13.37, 0.42];
+const PING_MS = [4.2, 6.66, 13.37, 0.42];
 
 function ping(args: string[]): Result {
   const target = targetOf('ping', args, []);
@@ -75,7 +75,7 @@ function ping(args: string[]): Result {
   const f = (n: number) => n.toFixed(3);
   return out(
     `PING ${target} 56(84) bytes of data.`,
-    ...PING_MS.map((ms, i) => `64 bytes from ${target}: icmp_seq=${i + 1} ttl=64 time=${ms.toFixed(2)} ms`),
+    ...PING_MS.map((ms, i) => `69 bytes from ${target}: icmp_seq=${i + 1} ttl=64 time=${ms.toFixed(2)} ms`),
     '',
     `--- ${target} ping statistics ---`,
     `${PING_MS.length} packets transmitted, ${PING_MS.length} received, 0% packet loss, time 3004ms`,

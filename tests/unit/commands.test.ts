@@ -257,7 +257,7 @@ describe('security tools', () => {
     for (const target of ['example.com', '10.0.0.1', '::1']) {
       const t = text(run(`${egg('cGluZw==')} ${target}`, ctx));
       expect(t[0]).toBe(`PING ${target} 56(84) bytes of data.`);
-      expect(t.filter((l) => l.startsWith(`64 bytes from ${target}: icmp_seq=`))).toHaveLength(4);
+      expect(t.filter((l) => l.startsWith(`69 bytes from ${target}: icmp_seq=`))).toHaveLength(4);
       expect(t).toContain('4 packets transmitted, 4 received, 0% packet loss, time 3004ms');
     }
   });
