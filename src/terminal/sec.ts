@@ -22,10 +22,30 @@ const stamp = (d: Date) => {
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())} ${zone}`;
 };
 
+const USAGE = 'Usage: nmap {IP address | domain name}';
+
+const OCTET = '(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)';
+const IPV4 = new RegExp(`^${OCTET}(\\.${OCTET}){3}$`);
+const LABEL = '(?!-)[a-z0-9-]{1,63}(?<!-)';
+const DOMAIN = new RegExp(`^(${LABEL}\\.)+[a-z]{2,63}\\.?$`, 'i');
+
+const isIPv6 = (s: string) => {
+  if (!s.includes(':')) return false;
+  try {
+    return new URL(`http://[${s}]/`).hostname !== '';
+  } catch {
+    return false;
+  }
+};
+
+/** True for an IPv4 or IPv6 address or a domain name; nothing else is a valid target. */
+const isTarget = (s: string) => IPV4.test(s) || isIPv6(s) || (s.length <= 253 && DOMAIN.test(s));
+
 function nmap(args: string[]): Result {
-  const target = args.filter((a) => !a.startsWith('-')).at(-1);
-  if (!target) {
-    return out('Nmap 7.95 ( https://nmap.org )', 'Usage: nmap [Scan Type(s)] [Options] {target specification}');
+  if (args.length === 0) return out('Nmap 7.95 ( https://nmap.org )', USAGE);
+  const [target] = args;
+  if (args.length > 1 || !isTarget(target)) {
+    return out(`nmap: invalid target '${args.join(' ')}': expected an IP address or domain name`, USAGE);
   }
   return out(
     `Starting Nmap 7.95 ( https://nmap.org ) at ${stamp(new Date())}`,
