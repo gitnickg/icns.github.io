@@ -222,10 +222,10 @@ describe('complete', () => {
 it('INTRO', () => expect([...INTRO]).toEqual(['whoami']));
 
 describe('security tools', () => {
-  it('scans any target and lists the joke ports in order', () => {
-    for (const target of ['example.com', '10.0.0.1']) {
+  it('scans an IP address or domain name and lists the joke ports in order', () => {
+    for (const target of ['example.com', 'icns.ca', 'sub.example.co.uk', '10.0.0.1', '255.255.255.255', '::1', '2001:db8::1']) {
       for (const theme of ['default', 'kali', 'cmd.exe'] as const) {
-        const t = text(run(`${egg('bm1hcA==')} -sV ${target}`, ctx, envFor(theme)));
+        const t = text(run(`${egg('bm1hcA==')} ${target}`, ctx, envFor(theme)));
         expect(t[1]).toBe(`Nmap scan report for ${target}`);
         const ports = t.filter((l) => /^\d+\/tcp/.test(l)).map((l) => l.split(/\s+/));
         expect(ports.map(([p, , s]) => [parseInt(p, 10), s])).toEqual([
@@ -238,6 +238,16 @@ describe('security tools', () => {
         ]);
         expect(ports.every(([, st]) => st === 'open')).toBe(true);
       }
+    }
+  });
+  it('rejects anything but a single IP address or domain name', () => {
+    const bad = ['-sV example.com', 'example.com -p 80', 'example.com 10.0.0.1', 'localhost', 'hello', '256.1.1.1',
+      '10.0.0', '10.0.0.1/24', 'http://example.com', 'example.com:80', '-bad-.com', 'exa_mple.com', 'example.123', '1::2::3'];
+    for (const args of bad) {
+      const t = text(run(`${egg('bm1hcA==')} ${args}`, ctx));
+      expect(t[0]).toMatch(/^nmap: invalid target/);
+      expect(t.at(-1)).toMatch(/^Usage: nmap/);
+      expect(t.join('\n')).not.toMatch(/\/tcp/);
     }
   });
   it('without a target prints usage', () => {
