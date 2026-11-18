@@ -17,7 +17,7 @@ Static site for icns consulting inc. (https://icns.ca), Halifax, Nova Scotia. As
 - Profiles (LinkedIn, GitHub) live in `src/data/profiles.json`.
 - `sitemap.xml` is generated at build; every new public page must appear in it with absolute URLs (https://icns.ca/...).
 - Optimize new images (WebP or compressed PNG/JPEG, well under 200 KB).
-- Logo: the "scope" mark (four corner brackets around a dot). Brackets use the brand blue (#1c3ed3, #8da2ff on dark), the dot uses ink (#0e1838, #e8ebf6 on dark). Source files are in `public/images/logo/`; lockup text is outlined Schibsted Grotesk Bold.
+- Logo: the "scope" mark (four corner brackets around a red maple leaf). Brackets use the brand blue (#1c3ed3, #8da2ff on dark); the leaf is always red (#e0301e), 22 units wide in the 64-unit mark. The leaf path lives in `src/lib/maple-leaf.ts` (shared with the footer). Source files are in `public/images/logo/`; lockup text is outlined Schibsted Grotesk Bold.
 - Keep `public/bitcoin.pdf`; it is intentionally served at /bitcoin.pdf.
 - Renew the `Expires` date in `public/.well-known/security.txt` before 2027-10-27.
 - The Pages artifact must include hidden files (/.well-known/security.txt); keep `include-hidden-files: true` in the deploy workflow.
