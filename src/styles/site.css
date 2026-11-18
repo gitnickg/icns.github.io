@@ -72,16 +72,14 @@
   --term-fg: #4c4f69; --term-accent: #1a5ce0; --term-cmd: #4c4f69; --term-muted: #5c5f77;
   --p-user: #4c4f69; --p-ok: #2e7d1f; --p-dir: #0e767b;
 }
-[data-theme="catppuccin-latte"] .term-logo path { stroke: #1c3ed3; }
-[data-theme="catppuccin-latte"] .term-logo circle { fill: #0e1838; }
+[data-theme="catppuccin-latte"] .term-logo-brackets { stroke: #1c3ed3; }
 @media (prefers-color-scheme: light) {
   [data-theme="default"] {
     --term-bg: #eff1f5; --term-chrome: #e6e9ef; --term-border: #ccd0da; --term-dot: #bcc0cc;
     --term-fg: #4c4f69; --term-accent: #1a5ce0; --term-cmd: #4c4f69; --term-muted: #5c5f77;
     --p-user: #4c4f69; --p-ok: #2e7d1f; --p-dir: #0e767b;
   }
-  [data-theme="default"] .term-logo path { stroke: #1c3ed3; }
-  [data-theme="default"] .term-logo circle { fill: #0e1838; }
+  [data-theme="default"] .term-logo-brackets { stroke: #1c3ed3; }
 }
 [data-theme="ubuntu"] {
   --term-bg: #300a24; --term-chrome: #2c2c2c; --term-border: #4e1f40; --term-dot: #4a4a4a;
@@ -118,8 +116,7 @@
   --term-fg: #000000; --term-accent: #0040c0; --term-cmd: #000000; --term-muted: #4a4a4a;
   --p-sym: #000000;
 }
-[data-theme="macosx"] .term-logo path { stroke: #1c3ed3; }
-[data-theme="macosx"] .term-logo circle { fill: #0e1838; }
+[data-theme="macosx"] .term-logo-brackets { stroke: #1c3ed3; }
 [data-theme="cmd.exe"] {
   --term-bg: #0c0c0c; --term-chrome: #1f1f1f; --term-border: #3a3a3a; --term-dot: #3a3a3a;
   --term-fg: #cccccc; --term-accent: #61a0ff; --term-cmd: #cccccc;
