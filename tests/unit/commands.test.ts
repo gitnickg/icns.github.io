@@ -240,10 +240,10 @@ describe('security tools', () => {
       }
     }
   });
-  it('rejects anything but a single IP address or domain name', () => {
-    const bad = ['-sV example.com', 'example.com -p 80', 'example.com 10.0.0.1', 'localhost', 'hello', '256.1.1.1',
+  const BAD_TARGETS = ['-sV example.com', 'example.com -p 80', 'example.com 10.0.0.1', 'localhost', 'hello', '256.1.1.1',
       '10.0.0', '10.0.0.1/24', 'http://example.com', 'example.com:80', '-bad-.com', 'exa_mple.com', 'example.123', '1::2::3'];
-    for (const args of bad) {
+  it('rejects anything but a single IP address or domain name', () => {
+    for (const args of BAD_TARGETS) {
       const t = text(run(`${egg('bm1hcA==')} ${args}`, ctx));
       expect(t[0]).toMatch(/^nmap: invalid target/);
       expect(t.at(-1)).toMatch(/^Usage: nmap/);
@@ -252,6 +252,23 @@ describe('security tools', () => {
   });
   it('without a target prints usage', () => {
     expect(text(run(egg('bm1hcA=='), ctx)).at(-1)).toMatch(/^Usage: nmap/);
+  });
+  it('ping replies four times from an IP address or domain name', () => {
+    for (const target of ['example.com', '10.0.0.1', '::1']) {
+      const t = text(run(`${egg('cGluZw==')} ${target}`, ctx));
+      expect(t[0]).toBe(`PING ${target} 56(84) bytes of data.`);
+      expect(t.filter((l) => l.startsWith(`69 bytes from ${target}: icmp_seq=`))).toHaveLength(4);
+      expect(t).toContain('4 packets transmitted, 4 received, 0% packet loss, time 3004ms');
+    }
+  });
+  it('ping rejects anything but a single IP address or domain name', () => {
+    for (const args of BAD_TARGETS) {
+      const t = text(run(`${egg('cGluZw==')} ${args}`, ctx));
+      expect(t[0]).toMatch(/^ping: invalid target/);
+      expect(t.at(-1)).toMatch(/^Usage: ping/);
+      expect(t.join('\n')).not.toMatch(/bytes from/);
+    }
+    expect(text(run(egg('cGluZw=='), ctx))).toEqual(['Usage: ping {IP address | domain name}']);
   });
   it('other tools print a banner', () => {
     for (const b of ['bXNmY29uc29sZQ==', 'c3FsbWFw', 'aHlkcmE=', 'bmlrdG8=', 'am9obg==', 'aGFzaGNhdA==']) {
@@ -263,5 +280,7 @@ describe('security tools', () => {
   it('are not listed or completed', () => {
     expect(text(run('help', ctx)).join('\n')).not.toMatch(new RegExp(egg('bm1hcA==')));
     expect(complete(egg('bm1hcA=='))).toEqual([]);
+    expect(text(run('help', ctx)).join('\n')).not.toMatch(new RegExp(egg('cGluZw==')));
+    expect(complete(egg('cGluZw=='))).toEqual([]);
   });
 });
