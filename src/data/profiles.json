@@ -1,8 +1,8 @@
 [
-  { "id": "linkedin",   "name": "LinkedIn",     "handle": "gitnickg",                             "url": "https://www.linkedin.com/in/gitnickg/" },
-  { "id": "github",     "name": "GitHub",       "handle": "gitnickg",                             "url": "https://github.com/gitnickg" },
-  { "id": "hackerone",  "name": "HackerOne",    "handle": "gitnickg",                             "url": "https://hackerone.com/gitnickg" },
-  { "id": "bugcrowd",   "name": "Bugcrowd",     "handle": "gitnickg",                             "url": "https://bugcrowd.com/h/gitnickg" },
-  { "id": "hackthebox", "name": "Hack The Box", "handle": "01a1a84d-12cc-715d-b5a4-d84f2f1acd77", "url": "https://profile.hackthebox.com/profile/01a1a84d-12cc-715d-b5a4-d84f2f1acd77" },
-  { "id": "tryhackme",  "name": "TryHackMe",    "handle": "gitnickg",                             "url": "https://tryhackme.com/p/gitnickg" }
+  { "id": "linkedin",   "name": "LinkedIn",     "handle": "gitnickg",                             "url": "https://www.linkedin.com/in/gitnickg/",                                       "footer": true },
+  { "id": "github",     "name": "GitHub",       "handle": "gitnickg",                             "url": "https://github.com/gitnickg",                                                 "footer": true },
+  { "id": "hackerone",  "name": "HackerOne",    "handle": "gitnickg",                             "url": "https://hackerone.com/gitnickg",                                              "footer": false },
+  { "id": "bugcrowd",   "name": "Bugcrowd",     "handle": "gitnickg",                             "url": "https://bugcrowd.com/h/gitnickg",                                             "footer": false },
+  { "id": "tryhackme",  "name": "TryHackMe",    "handle": "gitnickg",                             "url": "https://tryhackme.com/p/gitnickg",                                            "footer": true },
+  { "id": "hackthebox", "name": "Hack The Box", "handle": "01a1a84d-12cc-715d-b5a4-d84f2f1acd77", "url": "https://profile.hackthebox.com/profile/01a1a84d-12cc-715d-b5a4-d84f2f1acd77", "footer": true }
 ]
