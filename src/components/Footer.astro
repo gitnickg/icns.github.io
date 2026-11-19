@@ -1,6 +1,6 @@
 ---
 import profiles from '../data/profiles.json';
-import { isSafeHref } from '../lib/links';
+import { isSafeHref, NEW_TAB } from '../lib/links';
 import { MAPLE_LEAF } from '../lib/maple-leaf';
 
 // Simple Icons paths (CC0), 24×24 viewBox. Profiles without an icon fall back to their name.
@@ -25,7 +25,7 @@ const links = profiles.filter((p) => p.footer && isSafeHref(p.url));
     {
       links.map((p) => (
         <li>
-          <a href={p.url} rel="noopener noreferrer" aria-label={p.name}>
+          <a href={p.url} rel="noopener noreferrer" target="_blank" aria-label={p.name + NEW_TAB}>
             {ICONS[p.id] ? (
               <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="currentColor">
                 <path d={ICONS[p.id]} />

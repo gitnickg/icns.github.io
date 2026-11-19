@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { isSafeHref } from '../../lib/links';
+import { isSafeHref, opensInNewTab, NEW_TAB } from '../../lib/links';
 import { PRIVACY, PRIVACY_UPDATED } from '../../data/privacy';
 ---
 
@@ -9,7 +9,7 @@ import { PRIVACY, PRIVACY_UPDATED } from '../../data/privacy';
     <h1>Privacy</h1>
     {
       PRIVACY.map((line) => (
-        <p>{line.map((seg) => (isSafeHref(seg.href) ? <a href={seg.href} rel={seg.href.startsWith('https:') ? 'noopener noreferrer' : undefined}>{seg.text}</a> : seg.text))}</p>
+        <p>{line.map((seg) => (isSafeHref(seg.href) ? <a href={seg.href} rel={seg.href.startsWith('https:') ? 'noopener noreferrer' : undefined} target={opensInNewTab(seg.href) ? '_blank' : undefined} aria-label={opensInNewTab(seg.href) ? seg.text + NEW_TAB : undefined}>{seg.text}</a> : seg.text))}</p>
       ))
     }
     <p class="doc-meta">Updated <time datetime={PRIVACY_UPDATED}>{PRIVACY_UPDATED}</time>. <a href="/">cd ~ (back to icns.ca)</a></p>
