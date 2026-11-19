@@ -14,7 +14,7 @@ Static site for icns consulting inc. (https://icns.ca), Halifax, Nova Scotia. As
 - Keep it accessible: one `h1` per page, visible `:focus-visible` outlines, `width`/`height` on every `<img>`, and respect `prefers-reduced-motion`.
 - Copy: do not name the owner's employer; no "trusted", "private", "hands-on", "discreet" or similar taglines; no AtlSecCon or community organizing.
 - Hidden terminal commands are owner-chosen. Do not add any.
-- Profiles live in `src/data/profiles.json`. The `profiles` command lists every one as a linked name; only those with `"footer": true` (LinkedIn, GitHub, TryHackMe, Hack The Box) get a footer icon. Profile URLs carry no tracking parameters (tested).
+- Profiles live in `src/data/profiles.json`, in footer order. `"footer": true` gives a footer icon (TryHackMe, Hack The Box, GitHub, LinkedIn); `"terminal": true` lists the profile as a linked name in the `profiles` command (HackerOne, Bugcrowd). `resume` uses the LinkedIn entry, so keep it in the file. Profile URLs carry no tracking parameters (tested).
 - `sitemap.xml` is generated at build; every new public page must appear in it with absolute URLs (https://icns.ca/...).
 - Optimize new images (WebP or compressed PNG/JPEG, well under 200 KB).
 - Logo: the "scope" mark (four corner brackets around a red maple leaf). Brackets use the brand blue (#1c3ed3, #8da2ff on dark); the leaf is always red (#e0301e), 22 units wide in the 64-unit mark. The leaf path lives in `src/lib/maple-leaf.ts` (shared with the footer). Source files are in `public/images/logo/`; lockup text is outlined Schibsted Grotesk Bold.

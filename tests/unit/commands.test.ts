@@ -5,8 +5,10 @@ import { run, complete, completions, PUBLIC_COMMANDS, THEMES, TERMINALS, COLORS,
 
 const ctx: Context = {
   profiles: [
-    { id: 'linkedin', name: 'LinkedIn', handle: 'gitnickg', url: 'https://www.linkedin.com/in/gitnickg/' },
-    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg' },
+    { id: 'linkedin', name: 'LinkedIn', handle: 'gitnickg', url: 'https://www.linkedin.com/in/gitnickg/', footer: true },
+    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg', footer: true },
+    { id: 'hackerone', name: 'HackerOne', handle: 'gitnickg', url: 'https://hackerone.com/gitnickg', terminal: true },
+    { id: 'bugcrowd', name: 'Bugcrowd', handle: 'gitnickg', url: 'https://bugcrowd.com/h/gitnickg', terminal: true },
   ],
   securityTxt: 'Contact: mailto:hello@icns.ca\nExpires: 2030-01-01\n\n',
 };
@@ -31,8 +33,8 @@ describe('run', () => {
   it('profiles', () => {
     const r = run('profiles', ctx);
     expect(r.lines).toEqual([
-      [{ text: 'LinkedIn', href: 'https://www.linkedin.com/in/gitnickg/' }],
-      [{ text: 'GitHub', href: 'https://github.com/gitnickg' }],
+      [{ text: 'HackerOne', href: 'https://hackerone.com/gitnickg' }],
+      [{ text: 'Bugcrowd', href: 'https://bugcrowd.com/h/gitnickg' }],
     ]);
   });
   it('errors follow the theme\'s shell', () => {

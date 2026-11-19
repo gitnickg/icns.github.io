@@ -66,10 +66,10 @@ describe('index.html', () => {
     expect(footer.querySelector('p')?.textContent).toBe('© icns consulting inc., Halifax, Nova Scotia');
     const links = [...footer.querySelectorAll('a')];
     expect(links.map((a) => [a.getAttribute('href'), a.getAttribute('aria-label')])).toEqual([
-      ['https://www.linkedin.com/in/gitnickg/', 'LinkedIn'],
-      ['https://github.com/gitnickg', 'GitHub'],
       ['https://tryhackme.com/p/gitnickg', 'TryHackMe'],
       ['https://profile.hackthebox.com/profile/01a1a84d-12cc-715d-b5a4-d84f2f1acd77', 'Hack The Box'],
+      ['https://github.com/gitnickg', 'GitHub'],
+      ['https://www.linkedin.com/in/gitnickg/', 'LinkedIn'],
     ]);
     for (const a of links) expect(a.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
     const leaf = footer.querySelector('p .maple-leaf')!;

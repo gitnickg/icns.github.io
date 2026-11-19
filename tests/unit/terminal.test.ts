@@ -8,8 +8,10 @@ import type { Context } from '../../src/terminal/commands';
 const egg = (b64: string) => atob(b64);
 const ctx: Context = {
   profiles: [
-    { id: 'linkedin', name: 'LinkedIn', handle: 'gitnickg', url: 'https://www.linkedin.com/in/gitnickg/' },
-    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg' },
+    { id: 'linkedin', name: 'LinkedIn', handle: 'gitnickg', url: 'https://www.linkedin.com/in/gitnickg/', footer: true },
+    { id: 'github', name: 'GitHub', handle: 'gitnickg', url: 'https://github.com/gitnickg', footer: true },
+    { id: 'hackerone', name: 'HackerOne', handle: 'gitnickg', url: 'https://hackerone.com/gitnickg', terminal: true },
+    { id: 'bugcrowd', name: 'Bugcrowd', handle: 'gitnickg', url: 'https://bugcrowd.com/h/gitnickg', terminal: true },
   ],
   securityTxt: 'Contact: mailto:hello@icns.ca\nExpires: 2030-01-01\n',
 };
@@ -265,17 +267,19 @@ describe('mountTerminal', () => {
     submit('profiles');
     const mail = output.querySelector<HTMLAnchorElement>('a[href="mailto:hello@icns.ca"]');
     expect(mail).not.toBeNull();
-    const gh = output.querySelector<HTMLAnchorElement>('a[href="https://github.com/gitnickg"]');
-    expect(gh).not.toBeNull();
-    expect(gh!.getAttribute('rel')).toBe('noopener noreferrer');
+    const h1 = output.querySelector<HTMLAnchorElement>('a[href="https://hackerone.com/gitnickg"]');
+    expect(h1).not.toBeNull();
+    expect(h1!.textContent).toBe('HackerOne');
+    expect(h1!.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(output.querySelector('a[href="https://github.com/gitnickg"]')).toBeNull();
 
     build();
     mountTerminal(
       root,
       {
         profiles: [
-          { id: 'x', name: 'X', handle: 'x', url: 'javascript:alert(1)' },
-          { id: 'y', name: 'Y', handle: 'y', url: 'http://example.com/' },
+          { id: 'x', name: 'X', handle: 'x', url: 'javascript:alert(1)', terminal: true },
+          { id: 'y', name: 'Y', handle: 'y', url: 'http://example.com/', terminal: true },
         ],
         securityTxt: '',
       },

@@ -1,12 +1,16 @@
 import { expect, test } from 'vitest';
 import { loadProfiles } from '../../src/lib/profiles';
 
-test('order is linkedin, github, hackerone, bugcrowd, tryhackme, hackthebox', () => {
-  expect(loadProfiles().map((p) => p.id)).toEqual(['linkedin', 'github', 'hackerone', 'bugcrowd', 'tryhackme', 'hackthebox']);
+test('the footer shows tryhackme, hackthebox, github, linkedin, in that order', () => {
+  expect(loadProfiles().filter((p) => p.footer).map((p) => p.id)).toEqual(['tryhackme', 'hackthebox', 'github', 'linkedin']);
 });
 
-test('the footer shows linkedin, github, tryhackme and hackthebox', () => {
-  expect(loadProfiles().filter((p) => p.footer).map((p) => p.id)).toEqual(['linkedin', 'github', 'tryhackme', 'hackthebox']);
+test('the profiles command lists hackerone and bugcrowd only', () => {
+  expect(loadProfiles().filter((p) => p.terminal).map((p) => p.id)).toEqual(['hackerone', 'bugcrowd']);
+});
+
+test('resume still finds the linkedin profile', () => {
+  expect(loadProfiles().find((p) => p.id === 'linkedin')?.url).toBe('https://www.linkedin.com/in/gitnickg/');
 });
 
 test('profile URLs carry no tracking parameters', () => {
