@@ -1,4 +1,6 @@
 [
-  { "id": "linkedin", "name": "LinkedIn", "handle": "gitnickg", "url": "https://www.linkedin.com/in/gitnickg/" },
-  { "id": "github",   "name": "GitHub",   "handle": "gitnickg", "url": "https://github.com/gitnickg" }
+  { "id": "linkedin",   "name": "LinkedIn",     "handle": "gitnickg",                             "url": "https://www.linkedin.com/in/gitnickg/" },
+  { "id": "github",     "name": "GitHub",       "handle": "gitnickg",                             "url": "https://github.com/gitnickg" },
+  { "id": "hackthebox", "name": "Hack The Box", "handle": "01a1a84d-12cc-715d-b5a4-d84f2f1acd77", "url": "https://profile.hackthebox.com/profile/01a1a84d-12cc-715d-b5a4-d84f2f1acd77" },
+  { "id": "tryhackme",  "name": "TryHackMe",    "handle": "gitnickg",                             "url": "https://tryhackme.com/p/gitnickg" }
 ]

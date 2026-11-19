@@ -68,6 +68,8 @@ describe('index.html', () => {
     expect(links.map((a) => [a.getAttribute('href'), a.getAttribute('aria-label')])).toEqual([
       ['https://www.linkedin.com/in/gitnickg/', 'LinkedIn'],
       ['https://github.com/gitnickg', 'GitHub'],
+      ['https://profile.hackthebox.com/profile/01a1a84d-12cc-715d-b5a4-d84f2f1acd77', 'Hack The Box'],
+      ['https://tryhackme.com/p/gitnickg', 'TryHackMe'],
     ]);
     for (const a of links) expect(a.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
     const leaf = footer.querySelector('p .maple-leaf')!;
