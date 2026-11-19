@@ -1,6 +1,6 @@
 ---
 import { MAPLE_LEAF, leafTransform } from '../lib/maple-leaf';
-import { isSafeHref } from '../lib/links';
+import { isSafeHref, isExternalHref, NEW_TAB } from '../lib/links';
 import { INTRO, DEFAULT_THEME, run, type Context, type Line } from '../terminal/commands';
 import { promptFor, envFor } from '../terminal/shells';
 
@@ -30,7 +30,7 @@ const intro = INTRO.map((cmd) => ({ cmd, lines: run(cmd, ctx, envFor(DEFAULT_THE
             {prompt.pre && <div class="term-line term-pre"><span class="term-prompt">{prompt.pre.map((s) => (s.cls ? <span class={s.cls}>{s.text}</span> : s.text))}</span></div>}
             <div class="term-line term-echo"><span class="term-prompt">{prompt.main.map((s) => (s.cls ? <span class={s.cls}>{s.text}</span> : s.text))}</span> <span class="term-cmd">{cmd}</span></div>
             {lines.map((line) => (
-              <div class:list={['term-line', { 'term-blank': isBlank(line) }]}>{line.map((seg) => (isSafeHref(seg.href) ? <a class="term-link" href={seg.href} rel={seg.href.startsWith('https:') ? 'noopener noreferrer' : undefined}>{seg.text}</a> : seg.text))}</div>
+              <div class:list={['term-line', { 'term-blank': isBlank(line) }]}>{line.map((seg) => (isSafeHref(seg.href) ? <a class="term-link" href={seg.href} rel={seg.href.startsWith('https:') ? 'noopener noreferrer' : undefined} target={isExternalHref(seg.href) ? '_blank' : undefined} aria-label={isExternalHref(seg.href) ? seg.text + NEW_TAB : undefined}>{seg.text}</a> : seg.text))}</div>
             ))}
           </>
         ))
