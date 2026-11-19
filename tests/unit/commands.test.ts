@@ -30,13 +30,9 @@ describe('run', () => {
   });
   it('profiles', () => {
     const r = run('profiles', ctx);
-    expect(r.lines[0]).toEqual([
-      { text: 'linkedin   → ' },
-      { text: 'linkedin.com/in/gitnickg', href: 'https://www.linkedin.com/in/gitnickg/' },
-    ]);
-    expect(r.lines[1]).toEqual([
-      { text: 'github     → ' },
-      { text: 'github.com/gitnickg', href: 'https://github.com/gitnickg' },
+    expect(r.lines).toEqual([
+      [{ text: 'LinkedIn', href: 'https://www.linkedin.com/in/gitnickg/' }],
+      [{ text: 'GitHub', href: 'https://github.com/gitnickg' }],
     ]);
   });
   it('errors follow the theme\'s shell', () => {

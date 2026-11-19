@@ -89,10 +89,7 @@ const table: Record<string, (ctx: Context) => Result> = {
     ],
   }),
   profiles: (ctx) => ({
-    lines: ctx.profiles.map((p): Line => [
-      { text: `${p.id.padEnd(10)} → ` },
-      { text: p.url.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, ''), href: p.url },
-    ]),
+    lines: ctx.profiles.map((p): Line => [{ text: p.name, href: p.url }]),
   }),
   status: () => ({
     lines: [plain('● bug bounties: active'), plain('● consulting: open, part-time, remote')],

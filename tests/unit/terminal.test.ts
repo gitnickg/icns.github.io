@@ -283,7 +283,8 @@ describe('mountTerminal', () => {
     );
     submit('profiles');
     expect(output.querySelector('a')).toBeNull();
-    expect(output.textContent).toContain('javascript:alert(1)');
+    expect(output.textContent).toContain('X');
+    expect(output.textContent).not.toContain('javascript:');
   });
 
   it('types the intro over time and finishes immediately on submit', () => {
