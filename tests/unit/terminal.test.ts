@@ -275,7 +275,11 @@ describe('mountTerminal', () => {
     expect(h1!.getAttribute('aria-label')).toBe('HackerOne (opens in a new tab)');
     expect(mail!.getAttribute('target')).toBeNull();
     submit('bitcoin');
-    const own = output.querySelector<HTMLAnchorElement>('a[href="https://icns.ca/bitcoin.pdf"]')!;
+    const pdf = output.querySelector<HTMLAnchorElement>('a[href="https://icns.ca/bitcoin.pdf"]')!;
+    expect(pdf.getAttribute('target')).toBe('_blank');
+    expect(pdf.getAttribute('aria-label')).toBe('icns.ca/bitcoin.pdf (opens in a new tab)');
+    submit('privacy');
+    const own = output.querySelector<HTMLAnchorElement>('a[href="https://icns.ca/privacy/"]')!;
     expect(own.getAttribute('target')).toBeNull();
     expect(own.getAttribute('aria-label')).toBeNull();
     expect(output.querySelector('a[href="https://github.com/gitnickg"]')).toBeNull();

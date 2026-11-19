@@ -3,7 +3,7 @@ import { promptFor, envFor, type PromptSeg } from './shells';
 import { startRain } from './rain';
 import { startRestart, startWipe } from './effects';
 import { startRainbow } from './rainbow';
-import { isSafeHref, isExternalHref, NEW_TAB } from '../lib/links';
+import { isSafeHref, opensInNewTab, NEW_TAB } from '../lib/links';
 
 const STORAGE_KEY = 'icns-terminal-theme';
 
@@ -47,7 +47,7 @@ function renderLine(line: Line): HTMLElement {
       a.href = seg.href;
       if (seg.href.startsWith('https:')) a.rel = 'noopener noreferrer';
       a.textContent = seg.text;
-      if (isExternalHref(seg.href)) {
+      if (opensInNewTab(seg.href)) {
         a.target = '_blank';
         a.setAttribute('aria-label', seg.text + NEW_TAB);
       }

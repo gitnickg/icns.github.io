@@ -14,7 +14,7 @@ Static site for icns consulting inc. (https://icns.ca), Halifax, Nova Scotia. As
 - Keep it accessible: one `h1` per page, visible `:focus-visible` outlines, `width`/`height` on every `<img>`, and respect `prefers-reduced-motion`.
 - Copy: do not name the owner's employer; no "trusted", "private", "hands-on", "discreet" or similar taglines; no AtlSecCon or community organizing.
 - Hidden terminal commands are owner-chosen. Do not add any.
-- Links to other sites (https, not icns.ca) open in a new tab: `target="_blank"`, `rel="noopener noreferrer"`, and " (opens in a new tab)" added to the accessible name. Use `isExternalHref` and `NEW_TAB` from `src/lib/links.ts`. Links within icns.ca and mailto links open in place.
+- Links to other sites (https, not icns.ca) and PDFs (such as /bitcoin.pdf) open in a new tab: `target="_blank"`, `rel="noopener noreferrer"`, and " (opens in a new tab)" added to the accessible name. Use `opensInNewTab` and `NEW_TAB` from `src/lib/links.ts`. Other icns.ca pages and mailto links open in place.
 - Profiles live in `src/data/profiles.json`, in footer order. `"footer": true` gives a footer icon (TryHackMe, Hack The Box, GitHub, LinkedIn); `"terminal": true` lists the profile as a linked name in the `profiles` command (HackerOne, Bugcrowd). `resume` uses the LinkedIn entry, so keep it in the file. Profile URLs carry no tracking parameters (tested).
 - `sitemap.xml` is generated at build; every new public page must appear in it with absolute URLs (https://icns.ca/...).
 - Optimize new images (WebP or compressed PNG/JPEG, well under 200 KB).
